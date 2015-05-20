@@ -1,4 +1,5 @@
 *.pyc
+*.csv
 
 .DS_Store
 .dropbox
