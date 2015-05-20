@@ -6,6 +6,8 @@ import datetime
 
 from util import *
 
+EVENT_TYPES = ['problem', 'wiki', 'access', 'nagivate', 'discussion', 'video']
+
 class Enrollments:
     def __init__(self):
         self.users = []
@@ -125,6 +127,20 @@ class EventTimeLine:
         self.events.sort(key=lambda e: e.get_stamp())
         self.ready = True
 
+    def active_days(self):
+        return len(self.events_by_day)
+
+    def event_times(self):
+        t = {}
+        for et in EVENT_TYPES:
+            t[et] = 0
+        for e in self.events:
+            et = e.get_event()
+            if et in EVENT_TYPES:
+                t[et] += 1
+
+        return t
+
     def duration(self, unit="s"):
         if not self.ready:
             self.sort()
@@ -172,6 +188,9 @@ class EventDateset:
         self.size = 0
         self.labels = None
 
+    def isTest(self):
+        return self.labels is None
+
     def sort_timeline(self):
         for eid in self.timeline_by_eid:
             self.timeline_by_eid[eid].sort()
@@ -181,6 +200,9 @@ class EventDateset:
         self.labels = labels
 
     def get_label(self, eid):
+        if self.labels is None:
+            return None
+
         return self.labels[eid]
 
     def add_event(self, event):
@@ -190,6 +212,17 @@ class EventDateset:
         else:
             self.timeline_by_eid[eid].add_event(event)
         self.size += 1
+
+    def get_timeline(self, eid):
+        return self.timeline_by_eid[eid]
+
+    def iter_timelines(self):
+        for eid in self.timeline_by_eid:
+            yield self.timeline_by_eid[eid]
+
+    def iter_eids(self):
+        for eid in self.erlm:
+            yield eid
 
     def get_events_by_eid(self, eid):
         return self.timeline_by_eid[eid].events
@@ -228,6 +261,10 @@ class EventDateset:
 
     def iter_eids_by_course(self, cid):
         for eid in self.erlm.get_eids_by_course(cid):
+            yield eid
+
+    def iter_eids_by_user(self, uid):
+        for eid in self.erlm.get_eids_by_user(uid):
             yield eid
 
     def courses_by_user(self, uid):

@@ -157,10 +157,12 @@ where $e_l$ is the label of enrollment $e$, and $p_c$ and $q_c$ is the latent fa
 | $x_4$ | number wiki edits | Number of wiki edits |
 | $x_5$ | observed event variance | Variance of a student’s observed event timestamps |
 
-## Personality
+## Ideas
 
 - Each course has its own predictive model.
 - Student cohorts
+
+- Markov transition pattern across different pages [LINK](http://meroa.com/markov-chain-shopping-guide/)
 
 ## Calibration [PDF](https://github.com/infinitezxc/kaggle-avazu/blob/master/doc.pdf)
 

@@ -5,11 +5,10 @@ from optparse import OptionParser
 
 from data import *
 from util import *
+from feature import *
 
 import plotly.plotly as py
 from plotly.graph_objs import *
-
-
 
 
 def dropout_bar(dataset):
@@ -177,6 +176,10 @@ def main():
 
 
     # dropout_bar(train)
+
+    feature_factory = TimelineFeatureFactory()
+    feature_factory.dump(train, 'train.csv')
+    feature_factory.dump(test, 'test.csv')
 
 if __name__ == '__main__':
     main()
