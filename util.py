@@ -7,71 +7,6 @@ import time
 import datetime
 from itertools import *
 
-from data import *
-
-
-def load_data(erlm_file, event_file, label_file=None):
-    print 'loading enrollments ...'
-    erlms = Enrollments()
-    i = 0
-    with open(erlm_file, 'r') as r:
-        for line in r:
-            if i == 0:
-                i += 1
-                continue
-            eid, uid, cid = line.strip().split(',')
-
-            erlms.add(uid, cid, eid)
-
-            # i += 1
-            # if i % 1000000000:
-            #     print '#',
-    print
-    print 'end of loadings enrollments!'
-    print 'Total users: %d' % len(erlms.users)
-    print 'Total course: %d' % len(erlms.courses)
-    print 'Total size: %d' % erlms.size
-    print
-
-    print 'loading event dataset ...'
-    event_dataset = EventDateset(erlms)
-    i = 0
-    with open(event_file, 'r') as r:
-        # headers: enrollment_id,time,source,event,object
-        for line in r:
-            if i == 0:
-                i += 1
-                continue
-
-            eid, time, source, event, obj = line.strip().split(',')
-            event = Event(eid, time, source, event, obj)
-
-            event_dataset.add_event(event)
-            # i += 1
-            # if i % 1000000000 == 0:
-            #     print '#',
-    print '> sort event time line'
-    event_dataset.sort_timeline()
-    print '> end of sort'
-    print 'end of loadings dataset!'
-    print 'Total events: %d' % event_dataset.size
-    print
-
-    if label_file is None:
-        return event_dataset
-
-    print 'loading truth labels ...'
-    labels = {} #  for a dropout event and 0 for continuing study
-    with open(label_file, 'r') as r:
-        for line in r:
-            eid, label = line.strip().split(',')
-            labels[eid] = label
-    print 'end of loading labels!'
-    print 'Total train size: %d' % len(labels)
-    event_dataset.set_labels(labels)
-
-    return event_dataset
-
 def make_submission(m, test, filename="submission.csv"):
     pass
 
@@ -86,6 +21,8 @@ def get_duration(start_time_string, end_time_string):
     # duration_minutes = duration.total_seconds() / 60
     return duration
 
+def get_weekday(time_string, format="%Y-%m-%dT%H:%M:%S"):
+    return time.strftime("%A", time.strptime(time_string, format))
 
 def get_timestamp(s, format="%Y-%m-%dT%H:%M:%S"):
     """
@@ -101,6 +38,32 @@ def get_date(timestamp):
     """
     value = datetime.datetime.fromtimestamp(timestamp)
     return value.strftime('%Y-%m-%d %H:%M:%S')
+
+def duration_str(d):
+    sb = ""
+    week = int(d / (60 * 60 * 24 * 7))
+    if week > 0:
+        d -= week * (60 * 60 * 24 * 7)
+        sb += "%d weeks " % week
+
+    day = int(d / (60 * 60 * 24))
+    if day > 0:
+        d -= day * (60 * 60 * 24)
+        sb += "%d days " % day
+
+    hour = int(d / (60 * 60))
+    if hour > 0:
+        d -= hour * (60 * 60)
+        sb += "%d hours " % hour
+
+    minute = int (d / 60)
+    if minute > 0:
+        d -= minute * 60
+        sb += "%d minutes " % minute
+
+    sb += "%f seconds" % d
+
+    return sb
 
 def order(x):
     """

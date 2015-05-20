@@ -4,6 +4,8 @@
 import time
 import datetime
 
+from util import *
+
 class Enrollments:
     def __init__(self):
         self.users = []
@@ -97,11 +99,27 @@ class Event:
 class EventTimeLine:
     def __init__(self, eid=None, events = []):
         self.eid = eid
+        self.size = len(events)
         self.events = events
         self.ready = False
+        self.events_by_day = {}
+        for i, e in enumerate(events):
+            ymd = e.get_time().split('T')[0]
+            if ymd not in self.events_by_day:
+                self.events_by_day[ymd] = [i]
+            else:
+                self.events_by_day[ymd].append(i)
 
     def add_event(self, event):
         self.events.append(event)
+
+        ymd = event.get_time().split('T')[0]
+        if ymd not in self.events_by_day:
+            self.events_by_day[ymd] = [self.size]
+        else:
+            self.events_by_day[ymd].append(self.size)
+        self.size += 1
+
 
     def sort(self):
         self.events.sort(key=lambda e: e.get_stamp())
@@ -111,7 +129,10 @@ class EventTimeLine:
         if not self.ready:
             self.sort()
 
-        duration = get_duration(self.events[0].get_time(), self.events[-1].get_time)
+        if self.size == 0:
+            return 0
+
+        duration = get_duration(self.events[0].get_time(), self.events[-1].get_time())
         if unit == 's':
             return duration
         elif unit == 'm':
@@ -127,28 +148,19 @@ class EventTimeLine:
 
     def pretty_duration(self):
         d = self.duration()
-        week = int(d / (60 * 60 * 24 * 7))
-        if week > 0:
-            d -= week * (60 * 60 * 24 * 7)
-        day = int(d / (60 * 60 * 24))
-        if day > 0:
-            d -= day * (60 * 60 * 24)
-        hour = int(d / (60 * 60))
-        if hour > 0:
-            d -= hour * (60 * 60)
-        minute = int (d / 60)
-        if minute > 0:
-            d -= minute * 60
+        return duration_str(d)
 
-        
 
     def display(self):
         if not self.ready:
             self.sort()
-
+        last_event = None
         for i, e in enumerate(self.events):
-            print '%d: %s at %s' % (i, e.get_event(), e.get_time())
-        print
+            print '%d: %s at (%s) %s' % (i, e.get_event(), get_weekday(e.get_time()), e.get_time())
+            if last_event is not None:
+                d = get_duration(last_event.get_time(), e.get_time())
+                print ">>>lag: %s" % duration_str(d)
+        print "Duration: (%d days) %s" % (len(self.events_by_day), self.pretty_duration())
 
 class EventDateset:
     """
@@ -163,7 +175,7 @@ class EventDateset:
     def sort_timeline(self):
         for eid in self.timeline_by_eid:
             self.timeline_by_eid[eid].sort()
-            # self.timeline_by_eid[eid].display()
+            self.timeline_by_eid[eid].display()
 
     def set_labels(self, labels):
         self.labels = labels
