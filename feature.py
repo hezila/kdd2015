@@ -2,6 +2,7 @@
 #-*- coding: utf-8 -*-
 
 from data import *
+from util import *
 
 class TimelineFeatureFactory:
     def __init__(self):
@@ -22,21 +23,31 @@ class TimelineFeatureFactory:
             output.write("eid,%s\n" % ','.join(self.fnames))
         else:
             output.write("eid,target,%s\n" % ','.join(self.fnames))
+
         for eid, target, values in self.gen_features(dataset):
-            if not dataset.isTest:
-                output.write('%s,%s,%s\n' % (eid, target, ','.join('%.d' % v for v in values)))
+            if not dataset.isTest():
+                output.write('%s,%s,%s\n' % (eid, target, (','.join(['%.3f' % v for v in values]))))
             else:
-                output.write('%s,%s\n' % (eid, ','.join('%.d' % v for v in values)))
+                output.write('%s,%s\n' % (eid, (','.join(['%.3f' % v for v in values]))))
         output.close()
 
 def timeline_features(timeline):
+    # ['problem', 'wiki', 'access', 'nagivate', 'discussion', 'video']
+    # 2 - 7
     x = {}
-    x["duration"] = timeline.duration("d")
+    d = timeline.duration("d")
+    # x["duration"] = invert_log(d)
+    x["duration"] = count_log(d)
 
-    x['active_days'] = timeline.active_days()
+    d = timeline.active_days()
+    x['active_days'] = invert_log(d)
+    # x['active_days'] = count_log(d)
 
     et_times = timeline.event_times()
     for et in EVENT_TYPES:
-        x["%s_times" % et] = et_times[et]
+        if et in ['problem', 'access', 'nagivate']:
+            x["%s_times" % et] = invert_log(et_times[et])
+        else:
+            x["%s_times" % et] = count_log(et_times[et])
 
     return x

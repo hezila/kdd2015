@@ -189,12 +189,12 @@ class EventDateset:
         self.labels = None
 
     def isTest(self):
-        return self.labels is None
+        return (self.labels is None)
 
     def sort_timeline(self):
         for eid in self.timeline_by_eid:
             self.timeline_by_eid[eid].sort()
-            self.timeline_by_eid[eid].display()
+            # self.timeline_by_eid[eid].display()
 
     def set_labels(self, labels):
         self.labels = labels

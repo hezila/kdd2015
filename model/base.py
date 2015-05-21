@@ -54,3 +54,7 @@ class BaseClassifier:
             Returns the predicted class of the sample
         """
         pass
+
+
+    def evaluate(self, X, y):
+        pass

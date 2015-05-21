@@ -39,6 +39,7 @@ def get_date(timestamp):
     value = datetime.datetime.fromtimestamp(timestamp)
     return value.strftime('%Y-%m-%d %H:%M:%S')
 
+
 def duration_str(d):
     sb = ""
     week = int(d / (60 * 60 * 24 * 7))
@@ -65,6 +66,12 @@ def duration_str(d):
 
     return sb
 
+def count_log(x):
+    return math.log(1 + x)
+
+def invert_log(x):
+    return 1.0 / (1 + math.log(1 + x))
+
 def order(x):
     """
     returns the order of each element in x as a list.
@@ -75,6 +82,7 @@ def order(x):
     z = izip(z, rangeL)  # avoid problems with duplicates.
     D = sorted(z)
     return [d[1] for d in D]
+
 
 
 def order_dict(d):

@@ -166,9 +166,18 @@ class BoostedTreesClassifier(BaseClassifier):
         yhat = self.model.predict(X)
         return np.array(yhat)
 
+    def evaluate(self, X, y):
+        X = gl.SFrame(pd.DataFrame(X))
+        X['target'] = y
+        return self.model.evaluate(X, metric='accuracy')
+
 if __name__ == "__main__":
     X = np.random.randn(10,3)
     y = np.random.randint(0, 2, 10)
     clf = BoostedTreesClassifier()
     clf.fit(X, y)
     yhat = clf.predict(X)
+
+    p = clf.predict_proba(np.random.randn(1, 3))
+    print p
+    print p[0][1]

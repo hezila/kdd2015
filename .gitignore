@@ -1,7 +1,9 @@
 *.pyc
 *.csv
+*.txt
 
 .DS_Store
 .dropbox
 data
 output
+results

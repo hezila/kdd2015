@@ -130,6 +130,10 @@ where $N$ is the number of instances, $y_i$ is the truth label, and $p_i$ is the
 
 ### Logistic Regression
 
+### RF
+
+- [http://meroa.com/what-is-Gradient-Boosting-Models-and-Random-Forests-using-layman-terms/][http://meroa.com/what-is-Gradient-Boosting-Models-and-Random-Forests-using-layman-terms/]
+
 ### Follow-the-Regularized-Leader
 
 ### Latent Factor Model
@@ -176,6 +180,11 @@ $$logit(x) = \frac{1}{1 + \exp(-x)}$$
 $$intercept = invert\_logit(c_p) - invert\_logit(c_a)$$
 $$p = logit(invert\_logit(p) - intercept)$$
 where $p$ is the predicted result.
+
+## Ensemble
+
+- [http://meroa.com/voting-model-intro/][http://meroa.com/voting-model-intro/]
+- [http://meroa.com/heteroscedasticity/][http://meroa.com/heteroscedasticity/]
 
 ## Social
 
