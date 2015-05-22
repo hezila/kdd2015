@@ -25,6 +25,10 @@ class Enrollments:
         uid, cid = self.erlms[eid]
         return cid
 
+    def iter_courses(self):
+        for cid in self.courses:
+            yield cid
+
     def add(self, uid, cid, eid):
         if uid not in self.users:
             self.users.append(uid)
@@ -86,6 +90,10 @@ class Event:
     def get_time(self):
         return self.time
 
+    def get_day(self):
+        ymd = self.time.split('T')[0]
+        return ymd
+
     def get_stamp(self):
         return self.stamp
 
@@ -101,16 +109,14 @@ class Event:
 class EventTimeLine:
     def __init__(self, eid=None, events = []):
         self.eid = eid
-        self.size = len(events)
-        self.events = events
+        self.events = []
+        self.size = 0
         self.ready = False
         self.events_by_day = {}
-        for i, e in enumerate(events):
-            ymd = e.get_time().split('T')[0]
-            if ymd not in self.events_by_day:
-                self.events_by_day[ymd] = [i]
-            else:
-                self.events_by_day[ymd].append(i)
+        self.events_by_days = []
+        self.events_by_session = []
+        for e in events:
+            self.add_event(e)
 
     def add_event(self, event):
         self.events.append(event)
@@ -118,47 +124,94 @@ class EventTimeLine:
         ymd = event.get_time().split('T')[0]
         if ymd not in self.events_by_day:
             self.events_by_day[ymd] = [self.size]
+            self.events_by_days.append({"date": ymd, "events": [self.size]})
         else:
             self.events_by_day[ymd].append(self.size)
+            self.events_by_days[-1]['events'].append(self.size)
+
         self.size += 1
 
 
     def sort(self):
+        """
+        To FIX BUG:
+        """
         self.events.sort(key=lambda e: e.get_stamp())
         self.ready = True
 
     def active_days(self):
         return len(self.events_by_day)
 
+    def split_sessions(self):
+        current_day = None
+        current_time = 0
+        for i, e in enumerate(self.events):
+            d, t = e.get_time().split('T')
+            stamp = e.get_stamp()
+
+            if current_day is None and current_time == 0:
+                current_day = d
+                current_time = stamp
+                self.events_by_session.append([i])
+                continue
+
+
+            if d == current_day:
+                if (stamp - current_time) >= (60 * 30):
+                    self.events_by_session.append([i])
+                else:
+                    self.events_by_session[-1].append(i)
+                current_time = stamp
+            else:
+                self.events_by_session.append([i])
+                current_day = d
+                current_time = stamp
+        return len(self.events_by_session)
+
     def event_times(self):
         t = {}
         for et in EVENT_TYPES:
-            t[et] = 0
+            t[et] = 0.0
         for e in self.events:
             et = e.get_event()
             if et in EVENT_TYPES:
-                t[et] += 1
+                t[et] += 1.0
 
         return t
 
-    def duration(self, unit="s"):
+    def duration(self, unit="d"):
         if not self.ready:
             self.sort()
 
         if self.size == 0:
             return 0
+        if unit == "d":
+            duration = get_duration(self.events[0].get_day(), self.events[-1].get_day(), format="%Y-%m-%d")
+        else:
+            duration = get_duration(self.events[0].get_time(), self.events[-1].get_time())
 
-        duration = get_duration(self.events[0].get_time(), self.events[-1].get_time())
         if unit == 's':
             return duration
         elif unit == 'm':
-            return duration / 60
+            m = duration / 60
+            if m == 0:
+                m = 1.0
+            return m
         elif unit == 'h':
-            return duration / (60 * 60)
+            h = duration / (60 * 60)
+            if h == 0:
+                h = 1
+            return h
         elif unit == 'd':
-            return duration / (60 * 60 * 24)
+            d = duration / (60 * 60 * 24)
+            if d == 0:
+                d = 1
+            return d
         elif unit == 'w':
-            return duration / (60 * 60 * 24 * 7)
+            w = duration / (60 * 60 * 24 * 7)
+            if w == 0:
+                w = 1
+            return w
 
         return duration
 
@@ -266,6 +319,7 @@ class EventDateset:
     def iter_eids_by_user(self, uid):
         for eid in self.erlm.get_eids_by_user(uid):
             yield eid
+
 
     def courses_by_user(self, uid):
         eids = self.eids_by_user(uid)

@@ -7,13 +7,30 @@ import time
 import datetime
 from itertools import *
 
+
+import logging
+
+# Formated current timestamp
+def current_timestamp():
+    ts = time.time()
+    return datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+
+# Log message with timestamp
+def log_info(message):
+    ts = time.time()
+    logging.info(message + " " + current_timestamp())
+
+# Initialise logging
+def init_logging(log_file_path):
+    logging.basicConfig(format='%(message)s', level=logging.INFO, filename=log_file_path)
+
 def make_submission(m, test, filename="submission.csv"):
     pass
 
-def get_duration(start_time_string, end_time_string):
+def get_duration(start_time_string, end_time_string, format="%Y-%m-%dT%H:%M:%S"):
 
-    start_time_stamp = get_timestamp(start_time_string)
-    end_time_stamp = get_timestamp(end_time_string)
+    start_time_stamp = get_timestamp(start_time_string, format=format)
+    end_time_stamp = get_timestamp(end_time_string, format = format)
 
     duration = end_time_stamp - start_time_stamp
 

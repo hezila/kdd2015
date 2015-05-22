@@ -29,7 +29,7 @@ class StochasticGradientClassifier(BaseClassifier):
             eta0=0.01, fit_intercept=True, l1_ratio=0.15,
             learning_rate='optimal', loss='modified_huber', n_iter=5, n_jobs=1,
             penalty='l2', power_t=0.5, random_state=None, shuffle=True,
-            verbose=1, warm_start=False):
+            verbose=0, warm_start=False):
         self.alpha = alpha
         self.average = average
         self.class_weight = class_weight
@@ -115,6 +115,11 @@ class StochasticGradientClassifier(BaseClassifier):
 
     def evaluate(self, X, y):
         return self.model.score(X, y)
+
+    def print_coefficients(self, num_rows=18):
+        print('Intercept: \n', self.model.intercept_)
+        print self.model.coef_
+
 
 if __name__ == "__main__":
     X = np.random.randn(10,3)

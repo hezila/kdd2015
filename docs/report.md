@@ -91,6 +91,10 @@ Each line in this file describes a module in a course with its category, childre
 
 ## Starting point
 
+* [Beyond Prediction: First Steps Toward Automatic Intervention in MOOC Student Dropout](http://harvardx.harvard.edu/files/harvardx/files/nips2014humanpropelledlearning.pdf)
+
+* [Predicting MOOC Dropout over Weeks Using Machine Learning Methods](http://www2.informatik.hu-berlin.de/~kloftmar/publications/emnlp_mooc.pdf)
+
 * [Who is likely to drop out and why?](https://www.edx.org/blog/who-likely-drop-out-why)
 
 * [Likely to stop? Predicting Stopout in Massive Open Online Courses](http://arxiv.org/abs/1408.3382)
@@ -185,6 +189,10 @@ where $p$ is the predicted result.
 
 - [http://meroa.com/voting-model-intro/][http://meroa.com/voting-model-intro/]
 - [http://meroa.com/heteroscedasticity/][http://meroa.com/heteroscedasticity/]
+
+## Observations
+
+- Prior studies on Massive Open Online Courses (MOOCs) suggest that there is a significant decrease in student participation after one week of instruction. [PDF](http://educationaldatamining.org/EDM2014/uploads/procs2014/short%20papers/273_EDM-2014-Short.pdf)
 
 ## Social
 

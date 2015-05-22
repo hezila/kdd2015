@@ -38,8 +38,8 @@ def main():
     parser = OptionParser(usage=usage)
     parser.add_option("-i", "--input", dest="input",
         help="the input file")
-    parser.add_option("-p", "--plot", dest="plot",
-        help="the plog type")
+    parser.add_option("-n", "--name", dest="name",
+        help="the plog name")
 
     (options, remainder) = parser.parse_args()
 
@@ -49,14 +49,12 @@ def main():
     m = 0
     with open(options.input, 'r') as r:
         for line in r:
-            v = int(line.strip())
+            v = float(line.strip())
             if v not in hist_num:
                 hist_num[v] = 1.0
             else:
                 hist_num[v] += 1.0
 
-            if v >= 17:
-                v = 17
 
             hists.append(v)
             m += 1
@@ -67,7 +65,7 @@ def main():
         print '%d %d (%.3f)' % (k, n, (n / m * 100))
 
     # plot_hist(hists, 20, "#number of enrollments", "#courses", "Histogram of course vs #enrollments", "course_hist.png")
-    plot_hist(hists, 18, "#number of enrollments", "#users", "Histogram of user vs #enrollments", "user_hist.png")
+    plot_hist(hists, 18, "#number of enrollments", "#users", "Histogram of user vs #enrollments", filename = options.name)
 
 if __name__ == '__main__':
     main()

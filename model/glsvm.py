@@ -7,9 +7,9 @@ import pandas as pd
 
 from base import *
 
-class LogisticClassifier(BaseClassifier):
+class SVMClassifier(BaseClassifier):
     """
-    Wrapper of Graph Lab Logistic Classifier
+    Wrapper of Graph Lab SVM Classifier
 
     Parameters
     ----------
@@ -23,35 +23,15 @@ class LogisticClassifier(BaseClassifier):
 
     """
 
-    def __init__(self, l2_penalty=0.01, l1_penalty=0.0,
-                    solver='auto', feature_rescaling=False,
-                    convergence_threshold=0.01, step_size=1.0,
-                    lbfgs_memory_level=11, max_iterations=10,
-                    class_weights=None, validation_set=None,
-                    verbose=True):
-        """
-        For this model, the Newton-Raphson method is equivalent to the iteratively
-        re-weighted least squares algorithm. If the l1_penalty is greater than 0,
-        use the ‘fista’ solver.
+    def __init__(self, penalty=10.0, solver='auto', feature_rescaling=True,
+                    convergence_threshold=0.01, lbfgs_memory_level=11,
+                    max_iterations=10, class_weights=None,
+                    validation_set=None, verbose=False):
 
-        The model is trained using a carefully engineered collection of methods
-        that are automatically picked based on the input data.
-        The "newton" method works best for datasets with plenty of examples and few features
-        (long datasets).
-
-        Limited memory BFGS (lbfgs) is a robust solver for wide datasets (i.e datasets
-        with many coefficients). fista is the default solver for l1-regularized linear
-        regression. The solvers are all automatically tuned and the default options
-        should function well.
-
-        See the solver options guide for setting additional parameters for each of the solvers.
-        """
-        self.l2_penalty = l2_penalty
-        self.l1_penalty = l1_penalty
+        self.penalty = penalty
         self.solver = solver
         self.feature_rescaling = feature_rescaling
         self.convergence_threshold = convergence_threshold
-        self.step_size = step_size
         self.lbfgs_memory_level = lbfgs_memory_level
         self.max_iterations = max_iterations
         self.class_weights = class_weights
@@ -79,12 +59,12 @@ class LogisticClassifier(BaseClassifier):
 
         X = gl.SFrame(pd.DataFrame(X))
         X['target'] = y
-        self.model = gl.logistic_classifier.create(
+        self.model = gl.svm_classifier.create(
                 X, target='target',
-                l2_penalty = self.l2_penalty, l1_penalty = self.l1_penalty,
+                penalty = self.penalty,
                 solver = self.solver, feature_rescaling = self.feature_rescaling,
                 convergence_threshold = self.convergence_threshold,
-                step_size = self.step_size, lbfgs_memory_level = self.lbfgs_memory_level,
+                lbfgs_memory_level = self.lbfgs_memory_level,
                 max_iterations = self.max_iterations, class_weights = self.class_weights,
                 validation_set = self.validation_set, verbose = self.verbose)
 
@@ -105,18 +85,12 @@ class LogisticClassifier(BaseClassifier):
             Returns the probability of the sample for each class in the model
         """
 
+        # http://forum.dato.com/discussion/706/binary-classification-probabilities-class-labels
+
         X = gl.SFrame(pd.DataFrame(X))
-        preds = self.model.predict_topk(X, output_type = 'probability',
-                                   k = self.num_class)
-        preds['id'] = preds['id'].astype(int) + 1
-        preds = preds.unstack(['class', 'probability'], 'probs').unpack(
-                                'probs', '')
+        preds = self.model.predict(X, output_type="margin")
 
-        preds = preds.sort('id')
-        # print preds['id']
-
-        del preds['id']
-        return preds.to_dataframe().as_matrix()
+        # return preds.to_dataframe().as_matrix()
 
     def predict(self, X):
         """
@@ -141,13 +115,13 @@ class LogisticClassifier(BaseClassifier):
         return self.model.evaluate(X, metric='accuracy')
 
     def print_coefficients(self, num_rows=18):
-        coefficients = self.model['coefficients']
-        coefficients.print_rows(num_rows=num_rows)
-
+        pass
 
 if __name__ == "__main__":
     X = np.random.randn(10,3)
     y = np.random.randint(0, 2, 10)
-    clf = LogisticClassifier()
+    clf = SVMClassifier()
     clf.fit(X, y)
-    yhat = clf.predict(X)
+    print y
+    yhat = clf.predict_proba(X)
+    print yhat

@@ -80,7 +80,7 @@ class BoostedTreesClassifier(BaseClassifier):
                        step_size          = 0.3, min_child_weight = 0.1,
                        column_subsample   = 1,      row_subsample = 1,
                        max_depth          = 6,     max_iterations = 10,
-                       verbose            = True):
+                       verbose            = False):
         self.min_loss_reduction = min_loss_reduction
         self.class_weights      = None
         self.step_size          = step_size
@@ -170,6 +170,9 @@ class BoostedTreesClassifier(BaseClassifier):
         X = gl.SFrame(pd.DataFrame(X))
         X['target'] = y
         return self.model.evaluate(X, metric='accuracy')
+
+    def print_coefficients(self, num_rows=18):
+        pass
 
 if __name__ == "__main__":
     X = np.random.randn(10,3)

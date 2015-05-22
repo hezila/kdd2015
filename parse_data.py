@@ -5,7 +5,7 @@ from optparse import OptionParser
 
 from data import *
 from util import *
-from feature import *
+from feature.temp_feature import TempFeatureFactory
 
 import plotly.plotly as py
 from plotly.graph_objs import *
@@ -177,7 +177,17 @@ def main():
 
     # dropout_bar(train)
 
-    feature_factory = TimelineFeatureFactory()
+    ftrs = ['#duration', '#request', '#access', '#video', '#discussion', '#wiki', '#problem',
+        '#session', '#active_days', '#page_view',
+        '#avg_video_per_session', '#avg_discuss_per_session',
+        '#avg_access_per_session', '#avg_nagivate_per_session',
+        '#daytime_ratio', '#night_time', '#day_time',
+        '#weekend_ratio', '#weekend_time', '#weekday_time',
+        '#total_lagging', '#lagging_times', '#avg_lagging', '#lagging2week', '#lagging<2week',
+        '#ratio_browser']
+
+    feature_factory = TempFeatureFactory(ftrs)
+
     feature_factory.dump(train, 'train.csv')
     feature_factory.dump(test, 'test.csv')
 

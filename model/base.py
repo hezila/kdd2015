@@ -2,8 +2,8 @@
 #-*- coding: utf-8 -*-
 
 class BaseClassifier:
-    def __init__(self):
-        pass
+    def __init__(self, verbose=False):
+        self.verbose = verbose
 
     def fit(self, X, y):
         """
@@ -57,4 +57,7 @@ class BaseClassifier:
 
 
     def evaluate(self, X, y):
+        pass
+
+    def print_coefficients(self):
         pass
