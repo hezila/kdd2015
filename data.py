@@ -8,6 +8,143 @@ from util import *
 
 EVENT_TYPES = ['problem', 'wiki', 'access', 'nagivate', 'discussion', 'video']
 
+
+def load_enrollments(filename):
+    erlms = Enrollments()
+    i = 0
+    with open(filename, 'r') as r:
+        for line in r:
+            if i == 0:
+                i += 1
+                continue
+            eid, uid, cid = line.strip().split(',')
+
+            erlms.add(uid, cid, eid)
+
+            # i += 1
+            # if i % 1000000000:
+            #     print '#',
+    return erlms
+
+def load_modules(filename):
+    modules = Modules()
+    with open(filename, 'r') as r:
+        for line in r:
+            line = line.strip()
+            cid, mid, cate, children, start = line.split(',')
+            # course_id,module_id,category,children,start
+            children = children.strip()
+            if len(children) > 0:
+                children = children.split(' ')
+            else:
+                children = []
+            m = Module(cid, mid, cate, children, start)
+            modules.add_module(m)
+    return modules
+
+class Module:
+    def __init__(self, cid, mid, cate, children, start):
+        self.cid = cid
+        self.mid = mid
+        self.cate = cate
+        self.start = start
+        self.children = children
+
+    def get_cid(self):
+        return self.cid
+
+    def get_mid(self):
+        return self.mid
+
+    def get_cate(self):
+        return self.cate
+
+    def get_start(self):
+        if self.start == 'null':
+            return None
+        return get_timestamp(self.start)
+
+    def get_children(self):
+        return self.children
+
+class Modules:
+    def __init__(self):
+        self.modules = []
+        self.modules_by_cid = {}
+        self.module_by_mid = {}
+        self.chapters_by_cid = {}
+        self.chapter_by_sequence = {}
+        # self.sequence_by_vertical = {}
+        self.size = 0
+
+    def get_modules_by_cid(self, cid):
+        return [self.modules[i] for i in self.modules_by_cid[cid]]
+
+    def get_module_by_mid(self, mid):
+        if mid not in self.module_by_mid:
+            return None
+
+        i = self.module_by_mid[mid]
+        return self.modules[i]
+
+    def get_children_by_mid(self, mid):
+        m = self.module_by_mid[mid]
+        return [self.module_by_mid[mid] for mid in m.get_children()]
+
+    def filter_modules_by_cate(self, cate, modules = None, cid = None):
+        if modules is None:
+            moduels = self.get_modules_by_cid(cid)
+
+        ms = filter(lambda m: m.get_cate() == cate, modules)
+        return ms
+
+    def get_chapters(self, modules=None, cid=None):
+
+        ms = self.filter_modules_by_cate('chapter', modules, cid)
+        return ms
+
+    def get_start(self, mid):
+        m = self.get_module_by_mid(mid)
+        t = m.get_start()
+
+        if t is None:
+            return None
+
+        # if t is None and m.get_cate() == 'sequence':
+        #     c = self.chapter_by_sequence[mid]
+        #     t = self.get_start(c)
+        return t
+
+    def add_module(self, m):
+        cid = m.get_cid()
+        mid = m.get_mid()
+        self.modules.append(m)
+        id = self.size
+        if cid not in self.modules_by_cid:
+            self.modules_by_cid[cid] = [id]
+        else:
+            self.modules_by_cid[cid].append(id)
+
+        self.module_by_mid[mid] = id
+
+        cate = m.get_cate()
+        if cate == 'chapter':
+            if cid not in self.chapters_by_cid:
+                self.chapters_by_cid[cid] = [mid]
+            else:
+                self.chapters_by_cid[cid].append(mid)
+
+            children = m.get_children()
+            for c in children:
+                self.chapter_by_sequence[c] = mid
+
+        self.size += 1
+
+    def exist(self, mid):
+        return (mid in self.module_by_mid)
+
+
+
 class Enrollments:
     def __init__(self):
         self.users = []
@@ -21,7 +158,7 @@ class Enrollments:
         uid, cid = self.erlms[eid]
         return uid
 
-    def course_by_eid(self):
+    def course_by_eid(self, eid):
         uid, cid = self.erlms[eid]
         return cid
 
@@ -72,9 +209,9 @@ class Event:
               3. access - Accessing other course objects except videos and assignments.
               4. wiki - Accessing the course wiki.
               5. discussion - Accessing the course forum.
-              6. navigate - Navigating to other part of the course.
+              6. nagivate - Navigating to other part of the course.
               7. page_close – Closing the web page.
-        - object - The object the student access or navigate to.(For navigate and access event only).
+        - object - The object the student access or nagivate to.(For nagivate and access event only).
     """
     def __init__(self, eid, st, source, event, obj=None):
         self.eid = eid #enrollment id
@@ -89,6 +226,9 @@ class Event:
 
     def get_time(self):
         return self.time
+
+    def get_timestruct(self):
+        return datetime.datetime.strptime(self.get_time(), "%Y-%m-%dT%H:%M:%S")
 
     def get_day(self):
         ymd = self.time.split('T')[0]
@@ -114,7 +254,7 @@ class EventTimeLine:
         self.ready = False
         self.events_by_day = {}
         self.events_by_days = []
-        self.events_by_session = []
+        #self.events_by_session = None
         for e in events:
             self.add_event(e)
 
@@ -142,39 +282,54 @@ class EventTimeLine:
     def active_days(self):
         return len(self.events_by_day)
 
-    def split_sessions(self):
+    def split_sessions(self, start=-1):
         current_day = None
         current_time = 0
+        sessions = []
         for i, e in enumerate(self.events):
             d, t = e.get_time().split('T')
             stamp = e.get_stamp()
 
+            if stamp < start:
+                continue
+
             if current_day is None and current_time == 0:
                 current_day = d
                 current_time = stamp
-                self.events_by_session.append([i])
+                sessions.append([i])
                 continue
 
 
             if d == current_day:
                 if (stamp - current_time) >= (60 * 30):
-                    self.events_by_session.append([i])
+                    sessions.append([i])
                 else:
-                    self.events_by_session[-1].append(i)
+                    sessions[-1].append(i)
                 current_time = stamp
             else:
-                self.events_by_session.append([i])
+                sessions.append([i])
                 current_day = d
                 current_time = stamp
-        return len(self.events_by_session)
+        return sessions
 
-    def event_times(self):
+    def event_times(self, source=None, start=-1):
         t = {}
         for et in EVENT_TYPES:
             t[et] = 0.0
+
         for e in self.events:
             et = e.get_event()
-            if et in EVENT_TYPES:
+            s = e.get_source()
+            if et not in EVENT_TYPES:
+                continue
+            stp = e.get_stamp()
+            if stp < start:
+                continue
+
+            if source is not None:
+                if source == s:
+                    t[et] += 1.0
+            else:
                 t[et] += 1.0
 
         return t
@@ -240,6 +395,8 @@ class EventDateset:
         self.erlm = erlm # enrollment matrix
         self.size = 0
         self.labels = None
+        self.course_strt_dt = {}
+        self.course_end_dt = {}
 
     def isTest(self):
         return (self.labels is None)
@@ -274,7 +431,7 @@ class EventDateset:
             yield self.timeline_by_eid[eid]
 
     def iter_eids(self):
-        for eid in self.erlm:
+        for eid in self.erlm.erlms.keys():
             yield eid
 
     def get_events_by_eid(self, eid):
@@ -339,3 +496,41 @@ class EventDateset:
             if uid not in uids:
                 uids.append(uid)
         return uids
+
+    def get_course_strt_dt(self, cid):
+        if cid in self.course_strt_dt:
+            return self.course_strt_dt[cid]
+        strt_dt = None
+        end_dt = None
+        for eid in self.iter_eids_by_course(cid):
+            for e in self.get_events_by_eid(eid):
+                dt = e.get_stamp()
+                if strt_dt == None:
+                    strt_dt = dt
+                    end_dt = dt
+                if strt_dt > dt:
+                    strt_dt = dt
+                if end_dt < dt:
+                    end_dt = dt
+        self.course_strt_dt[cid] = strt_dt
+        self.course_end_dt[cid] = end_dt
+        return strt_dt
+
+    def get_course_end_dt(self, cid):
+        if cid in self.course_end_dt:
+            return self.course_end_dt[cid]
+        strt_dt = None
+        end_dt = None
+        for eid in self.iter_eids_by_course(cid):
+            for e in self.get_events_by_eid(eid):
+                dt = e.get_stamp()
+                if strt_dt == None:
+                    strt_dt = dt
+                    end_dt = dt
+                if strt_dt > dt:
+                    strt_dt = dt
+                if end_dt < dt:
+                    end_dt = dt
+        self.course_strt_dt[cid] = strt_dt
+        self.course_end_dt[cid] = end_dt
+        return end_dt

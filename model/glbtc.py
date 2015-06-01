@@ -82,7 +82,7 @@ class BoostedTreesClassifier(BaseClassifier):
                        max_depth          = 6,     max_iterations = 10,
                        verbose            = False):
         self.min_loss_reduction = min_loss_reduction
-        self.class_weights      = None
+        self.class_weights      = class_weights
         self.step_size          = step_size
         self.min_child_weight   = min_child_weight
         self.column_subsample   = column_subsample

@@ -1,0 +1,1 @@
+{"paras": {"l2_penalty": 1.0, "step_size": 0.01, "convergence_threshold": 0.001, "max_iterations": 250}, "auc": 0.79012327113974989, "name": "lgc", "cid": "9Bd26pfDLvkPINwLnpaGcf0LrLUvY1Mz"}

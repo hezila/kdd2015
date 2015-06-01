@@ -1,0 +1,17 @@
+{
+    "sgd": {"alpha": 6.5,
+            "epsilon": 0.001,
+            "l1_ratio": 0.0,
+            "n_iter": 450},
+    "lgc": {"l2_penalty": 3.1,
+                 "max_iterations": 250,
+                 "step_size": 0.02,
+                 "convergence_threshold": 0.001},
+    "gbt": {"min_loss_reduction": 0.5,
+            "step_size": 0.01,
+            "min_child_weight": 8,
+            "column_subsample": 0.8,
+            "row_subsample": 0.9,
+            "max_depth": 3,
+            "max_iterations": 500}
+}

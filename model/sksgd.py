@@ -49,12 +49,6 @@ class StochasticGradientClassifier(BaseClassifier):
         self.warm_start = warm_start
 
 
-        self.model = SGDClassifier(alpha=self.alpha, average=self.average, class_weight=self.class_weight,
-                                    epsilon=self.epsilon, eta0=self.eta0, fit_intercept=self.fit_intercept,
-                                    l1_ratio=self.l1_ratio, learning_rate=self.learning_rate, loss=self.loss,
-                                    n_iter=self.n_iter, n_jobs=self.n_jobs, penalty=self.penalty,
-                                    power_t=self.power_t, random_state=self.random_state, shuffle=self.shuffle,
-                                    verbose=self.verbose, warm_start=self.warm_start)
 
 
 
@@ -77,6 +71,12 @@ class StochasticGradientClassifier(BaseClassifier):
         self : object
             return self.
         """
+        self.model = SGDClassifier(alpha=self.alpha, average=self.average, class_weight=self.class_weight,
+                                    epsilon=self.epsilon, eta0=self.eta0, fit_intercept=self.fit_intercept,
+                                    l1_ratio=self.l1_ratio, learning_rate=self.learning_rate, loss=self.loss,
+                                    n_iter=self.n_iter, n_jobs=self.n_jobs, penalty=self.penalty,
+                                    power_t=self.power_t, random_state=self.random_state, shuffle=self.shuffle,
+                                    verbose=self.verbose, warm_start=self.warm_start)
 
 
         self.model.fit(X, y)

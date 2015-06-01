@@ -21,42 +21,46 @@ class FeatureSelector:
         return d
 
 
-def load_dataset(train_file, test_file, with_norm=False, verbose=False):
+def load_dataset(train_file, test_file, with_norm=False, verbose=False, skip_cols=['eid', 'cid', 'target']):
     # import data
     train = pd.read_csv(train_file)
     test = pd.read_csv(test_file)
 
     # # drop ids and get labels
-    labels = train.target.values
-    train = train.drop('eid', axis=1)
+    # labels = train.target.values
+    # train = train.drop('eid', axis=1)
 
     print train.target.value_counts()/train.target.count()
 
-    train = train.drop('target', axis=1)
+    # train = train.drop('target', axis=1)
     #
     # test = test.drop('eid', axis=1)
 
     if verbose:
         for ftr in train.columns:
+            if ftr in skip_cols:
+                continue
             mean = train[ftr].mean()
             stdev = train[ftr].std()
             maxvalue = train[ftr].max()
             print '%s\t: %f (max: %f; std: %f)' % (ftr, mean, maxvalue, stdev)
-            output =  open('output/%s_hist.txt' % ftr, 'w')
-            output.write('%s' % '\n'.join(['%f' % v for v in train[ftr]]))
-            output.close()
+            # output =  open('output/%s_hist.txt' % ftr, 'w')
+            # output.write('%s' % '\n'.join(['%f' % v for v in train[ftr]]))
+            # output.close()
 
-    # if with_norm:
-    #     col_features = train.columns
-    #     for ftr in col_features:
-    #         mean = train[ftr].mean()
-    #         stdev = train[ftr].std()
-    #         train[ftr] = (train[ftr] - mean) / stdev
-    #         test[ftr] = (test[ftr] - mean) / stdev
-    #         if verbose:
-    #             print '%s\t: %f (std: %f)' % (ftr, mean, stdev)
+    if with_norm:
+        col_features = train.columns
+        for ftr in col_features:
+            if ftr in skip_cols:
+                continue
+            mean = train[ftr].mean()
+            stdev = train[ftr].std()
+            train[ftr] = (train[ftr] - mean) / stdev
+            test[ftr] = (test[ftr] - mean) / stdev
+            # if verbose:
+            #     print '%s\t: %f (std: %f)' % (ftr, mean, stdev)
 
-    return (train, labels, test)
+    return (train, test)
 
 class NormTransformer:
     def __init__(self, features, exludes=[]):
@@ -94,6 +98,24 @@ def log_transf(sf, features):
 def log_transf_replace(sf, features):
     for col in features:
         sf[col] = sf[col].apply(lambda x: math.log(1.0 + x))
+
+
+def square_root_transf(sf, features):
+    for col in features:
+        sf['sqr_' + col] = sf[col].apply(lambda x: math.sqrt(x))
+
+def square_root_transf_replace(sf, features):
+    for col in features:
+        sf[col] = sf[col].apply(lambda x: math.sqrt(x))
+
+def inverse_transf(sf, features):
+    for col in features:
+        sf['inverse_' + col] = sf[col].apply(lambda x: 1.0 / (x+1.0))
+
+def inverse_transf_replace(sf, features):
+    for col in features:
+        sf[col] = sf[col].apply(lambda x: 1.0 / (1.0 + x))
+
 
 def encode_labels(labels):
     # encode labels

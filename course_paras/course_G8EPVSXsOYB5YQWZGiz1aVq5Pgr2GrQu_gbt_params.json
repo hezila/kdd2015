@@ -1,0 +1,1 @@
+{"paras": {"min_loss_reduction": 0.8, "step_size": 0.01, "min_child_weight": 5, "column_subsample": 0.8, "row_subsample": 0.6, "max_depth": 5, "max_iterations": 200}, "auc": 0.8223418037237662, "name": "gbt", "cid": "G8EPVSXsOYB5YQWZGiz1aVq5Pgr2GrQu"}

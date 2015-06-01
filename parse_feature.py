@@ -5,7 +5,7 @@ from optparse import OptionParser
 
 from data import *
 from util import *
-from feature.temp_feature import TempFeatureFactory
+from feature.simple_feature import SimpleFeatureFactory
 
 import plotly.plotly as py
 from plotly.graph_objs import *
@@ -54,26 +54,14 @@ def dropout_bar(dataset):
 
 def load_data(erlm_file, event_file, label_file=None):
     print 'loading enrollments ...'
-    erlms = Enrollments()
-    i = 0
-    with open(erlm_file, 'r') as r:
-        for line in r:
-            if i == 0:
-                i += 1
-                continue
-            eid, uid, cid = line.strip().split(',')
-
-            erlms.add(uid, cid, eid)
-
-            # i += 1
-            # if i % 1000000000:
-            #     print '#',
-    print
+    erlms = load_enrollments(erlm_file)
     print 'end of loadings enrollments!'
     print 'Total users: %d' % len(erlms.users)
     print 'Total course: %d' % len(erlms.courses)
     print 'Total size: %d' % erlms.size
     print
+
+
 
     print 'loading event dataset ...'
     event_dataset = EventDateset(erlms)
@@ -92,12 +80,10 @@ def load_data(erlm_file, event_file, label_file=None):
             # i += 1
             # if i % 1000000000 == 0:
             #     print '#',
-    print '> sort event time line'
-    event_dataset.sort_timeline()
-    print '> end of sort'
+    # print '> sort event time line'
+    # event_dataset.sort_timeline()
+    # print '> end of sort'
     print 'end of loadings dataset!'
-    print 'Total events: %d' % event_dataset.size
-    print
 
     if label_file is None:
         return event_dataset
@@ -120,8 +106,12 @@ def main():
     parser = OptionParser(usage=usage)
     parser.add_option("-e", "--enrollment", dest="erlm",
         help="the enrollments file")
+    parser.add_option("-m", "--modules", dest="modules",
+        help="the modules file")
     parser.add_option("-l", "--log", dest="log",
         help="the log file")
+    parser.add_option("-f", "--feature", dest="feature",
+        help="the feature file")
     parser.add_option("-t", "--truth", dest="truth",
         help="the truth file")
 
@@ -132,6 +122,10 @@ def main():
 
     (options, remainder) = parser.parse_args()
 
+    print 'loading modules'
+    modules = load_modules(options.modules)
+    print 'end of loading modules!'
+
     print 'Traing data ....'
     train = load_data(options.erlm, options.log, options.truth)
     print '#################'
@@ -141,55 +135,29 @@ def main():
     print '#################'
 
 
-    new_users = []
-    for uid in test.iter_users():
-        if not train.has_user(uid):
-            new_users.append(uid)
-    print '!!! %d new users in test dataset' % (len(new_users))
+    ftrs = []
+    with open(options.feature, 'r') as r:
+        for line in r:
+            line = line.strip()
+            if len(line) == 0 or line.startswith('%'):
+                continue
 
-    new_courses = []
-    for cid in test.iter_courses():
-        if not train.has_course(cid):
-            new_courses.append(cid)
-    print '!!! %d new courses in test dataset' % len(new_courses)
+            if ':' not in line:
+                fname = line
+            else:
+                fname, _ = line.split(':')
+                fname = fname.strip()
 
-    # print 'Hist: users vs enrollment'
-    # user_hist = []
-    # for uid in train.iter_users():
-    #     eids = train.eids_by_user(uid)
-    #     user_hist.append(len(eids))
-    #
-    # output = open("user_hist.csv", 'w')
-    # for v in user_hist:
-    #     output.write('%d\n' % v)
-    # output.close()
-    #
-    # print 'Hist: course vs enrollment'
-    # course_hist = []
-    # for cid in train.iter_courses():
-    #     eids = train.eids_by_course(cid)
-    #     course_hist.append(len(eids))
-    # output = open("course_hist.csv", 'w')
-    # for v in course_hist:
-    #     output.write("%d\n" % v)
-    # output.close()
+            if fname in ftrs:
+                print 'Oops: please check the features you attemp to extract!!!'
+                sys.exit(0)
 
+            ftrs.append(fname)
 
-    # dropout_bar(train)
+    feature_factory = SimpleFeatureFactory(ftrs, modules)
 
-    ftrs = ['#duration', '#request', '#access', '#video', '#discussion', '#wiki', '#problem',
-        '#session', '#active_days', '#page_view',
-        '#avg_video_per_session', '#avg_discuss_per_session',
-        '#avg_access_per_session', '#avg_nagivate_per_session',
-        '#daytime_ratio', '#night_time', '#day_time',
-        '#weekend_ratio', '#weekend_time', '#weekday_time',
-        '#total_lagging', '#lagging_times', '#avg_lagging', '#lagging2week', '#lagging<2week',
-        '#ratio_browser']
-
-    feature_factory = TempFeatureFactory(ftrs)
-
-    feature_factory.dump(train, 'train.csv')
-    feature_factory.dump(test, 'test.csv')
+    feature_factory.dump(train, 'simple_train.csv')
+    feature_factory.dump(test, 'simple_test.csv')
 
 if __name__ == '__main__':
     main()
