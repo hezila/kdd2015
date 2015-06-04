@@ -6,4 +6,5 @@ if [ $# == 2 ]; then
     debug_limit=$2
 fi
 
-python python/extract_feature.py enrollment train data/log_train.csv data/train_feature.csv $mode $debug_limit
+python py/extract_feature.py enrollment train data/log_train.csv data/train_enrollment_feature.csv $mode $debug_limit
+python py/extract_feature.py enrollment test data/log_test.csv data/test_enrollment_feature.csv $mode $debug_limit

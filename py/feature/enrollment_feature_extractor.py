@@ -27,8 +27,12 @@ class EnrollmentFeatureExtractor(FeatureExtractor):
 
     def _extract_enrollment_features(self, iter):
         for bag in iter:
-            yield bag.extract_request_count()\
-                .extract_request_days()
+            yield bag.extract_duration_days()\
+                .extract_request_count()\
+                .extract_active_days()\
+                .extract_active_days_per_week()\
+                .extract_fst_day()\
+                .extract_lst_day()
 
     def _tuple_generator(self, iter):
         for line in iter:

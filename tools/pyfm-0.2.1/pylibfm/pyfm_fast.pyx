@@ -26,31 +26,33 @@ DEF CLASSIFICATION = 1
 DEF OPTIMAL = 0
 DEF INVERSE_SCALING = 1
 
+
 cdef class FM_fast(object):
-    """Factorization Machine fitted by minimizing a regularized empirical loss with adaptive SGD.
-    
+    """Factorization Machine fitted by minimizing a regularized empirical loss with
+    adaptive SGD.
+
     Parameters
     ----------
     w : np.ndarray[DOUBLE, ndim=1, mode='c']
-    v : ndarray[DOUBLE, ndim=2, mode='c'] 
-    num_factors : int 
-    num_attributes : int 
-    n_iter : int 
-    k0 : int 
-    k1 : int 
-    w0 : double 
-    t : double 
-    t0 : double 
-    l : double 
-    power_t : double 
-    min_target : double 
-    max_target : double 
-    eta0 : double 
-    learning_rate_schedule : int 
-    shuffle_training : int 
-    task : int 
-    seed : int 
-    verbose : int 
+    v : ndarray[DOUBLE, ndim=2, mode='c']
+    num_factors : int
+    num_attributes : int
+    n_iter : int
+    k0 : int
+    k1 : int
+    w0 : double
+    t : double
+    t0 : double
+    l : double
+    power_t : double
+    min_target : double
+    max_target : double
+    eta0 : double
+    learning_rate_schedule : int
+    shuffle_training : int
+    task : int
+    seed : int
+    verbose : int
     """
 
     cdef double w0
@@ -140,10 +142,10 @@ cdef class FM_fast(object):
         self.grad_w = np.zeros(self.num_attributes)
         self.grad_v = np.zeros((self.num_factors, self.num_attributes))
 
-    cdef _predict_instance(self, DOUBLE * x_data_ptr, 
-                           INTEGER * x_ind_ptr, 
+    cdef _predict_instance(self, DOUBLE * x_data_ptr,
+                           INTEGER * x_ind_ptr,
                            int xnnz):
-        
+
         # Helper variables
         cdef DOUBLE result = 0.0
         cdef int feature
@@ -178,8 +180,8 @@ cdef class FM_fast(object):
         self.sum = sum_
         return self._scale_prediction(result)
 
-    cdef _predict_scaled(self, DOUBLE * x_data_ptr, 
-                           INTEGER * x_ind_ptr, 
+    cdef _predict_scaled(self, DOUBLE * x_data_ptr,
+                           INTEGER * x_ind_ptr,
                            int xnnz):
         cdef DOUBLE result = 0.0
         cdef unsigned int i = 0
@@ -231,9 +233,9 @@ cdef class FM_fast(object):
         elif self.task == CLASSIFICATION:
             p = 1.0 / (1.0 + exp(-p))
         return p
-    
+
     def _predict(self, CSRDataset dataset):
-        
+
         # Helper access variables
         cdef unsigned int i = 0
         cdef Py_ssize_t n_samples = dataset.n_samples
@@ -243,21 +245,21 @@ cdef class FM_fast(object):
         cdef DOUBLE sample_weight = 1.0
         cdef DOUBLE y_placeholder
         cdef DOUBLE p = 0.0
-    
+
         cdef np.ndarray[DOUBLE, ndim=1, mode='c'] return_preds = np.zeros(n_samples)
-    
+
         for i in range(n_samples):
             dataset.next(& x_data_ptr, & x_ind_ptr, & xnnz, & y_placeholder,
                          & sample_weight)
             p = self._scale_prediction(self._predict_instance(x_data_ptr, x_ind_ptr, xnnz))
             return_preds[i] = p
         return return_preds
-    
-    cdef _sgd_theta_step(self, DOUBLE * x_data_ptr, 
-                        INTEGER * x_ind_ptr, 
+
+    cdef _sgd_theta_step(self, DOUBLE * x_data_ptr,
+                        INTEGER * x_ind_ptr,
                         int xnnz,
                         DOUBLE y):
-    
+
         cdef DOUBLE mult = 0.0
         cdef DOUBLE p
         cdef int feature
@@ -285,17 +287,17 @@ cdef class FM_fast(object):
             mult = 2 * (p - y);
         else:
             mult = y * ( (1.0 / (1.0+exp(-y*p))) - 1.0)
-        
+
         # Set learning schedule
         if self.learning_rate_schedule == OPTIMAL:
             self.learning_rate = 1.0 / (self.t + self.t0)
 
         elif self.learning_rate_schedule == INVERSE_SCALING:
             self.learning_rate = self.learning_rate / pow(self.t, self.power_t)
-    
+
         if self.verbose > 0:
             self.sumloss += _squared_loss(p,y) if self.task == REGRESSION else _log_loss(p,y)
-    
+
         # Update global bias
         if self.k0 > 0:
             grad_0 = mult
@@ -306,7 +308,7 @@ cdef class FM_fast(object):
             for i in range(xnnz):
                 feature = x_ind_ptr[i]
                 grad_w[feature] = mult * x_data_ptr[i]
-                w[feature] -= learning_rate * (grad_w[feature] 
+                w[feature] -= learning_rate * (grad_w[feature]
                                    + 2 * reg_w * w[feature])
 
         # Update feature factor vectors
@@ -316,7 +318,7 @@ cdef class FM_fast(object):
                 feature = x_ind_ptr[i]
                 grad_v[f,feature] = mult * (x_data_ptr[i] * (sum_[f] - v[f,feature] * x_data_ptr[i]))
                 v[f,feature] -= learning_rate * (grad_v[f,feature] + 2 * reg_v[f] * v[f,feature])
-    
+
         # Pass updated vars to other functions
         self.learning_rate = learning_rate
         self.w0 = w0
@@ -328,8 +330,8 @@ cdef class FM_fast(object):
         self.t += 1
         self.count += 1
 
-    cdef _sgd_lambda_step(self, DOUBLE * validation_x_data_ptr, 
-                        INTEGER * validation_x_ind_ptr, 
+    cdef _sgd_lambda_step(self, DOUBLE * validation_x_data_ptr,
+                        INTEGER * validation_x_ind_ptr,
                         int validation_xnnz,
                         DOUBLE validation_y):
 
@@ -371,7 +373,7 @@ cdef class FM_fast(object):
             lambda_w_grad = -2 * learning_rate * lambda_w_grad
             reg_w -= learning_rate * grad_loss * lambda_w_grad
             reg_w = max(0.0, reg_w)
-        
+
         for f in xrange(self.num_factors):
             sum_f = 0.0
             sum_f_dash = 0.0
@@ -392,17 +394,17 @@ cdef class FM_fast(object):
         self.reg_v = reg_v
 
     def fit(self, CSRDataset dataset, CSRDataset validation_dataset):
-    
+
         # get the data information into easy vars
         cdef Py_ssize_t n_samples = dataset.n_samples
         cdef Py_ssize_t n_validation_samples = validation_dataset.n_samples
-        
+
         cdef DOUBLE * x_data_ptr = NULL
         cdef INTEGER * x_ind_ptr = NULL
-    
+
         cdef DOUBLE * validation_x_data_ptr = NULL
         cdef INTEGER * validation_x_ind_ptr = NULL
-    
+
         # helper variables
         cdef int xnnz
         cdef DOUBLE y = 0.0
@@ -411,40 +413,74 @@ cdef class FM_fast(object):
         cdef unsigned int count = 0
         cdef unsigned int epoch = 0
         cdef unsigned int i = 0
-    
+
         cdef DOUBLE sample_weight = 1.0
         cdef DOUBLE validation_sample_weight = 1.0
 
         for epoch in range(self.n_iter):
-    
+
             if self.verbose > 0:
                 print("-- Epoch %d" % (epoch + 1))
             self.count = 0
             self.sumloss = 0
             if self.shuffle_training:
                 dataset.shuffle(self.seed)
-    
+
             for i in range(n_samples):
                 dataset.next( & x_data_ptr, & x_ind_ptr, & xnnz, & y,
                              & sample_weight)
-    
                 self._sgd_theta_step(x_data_ptr, x_ind_ptr, xnnz, y)
-    
+
                 if epoch > 0:
                     validation_dataset.next( & validation_x_data_ptr, & validation_x_ind_ptr,
-                                             & validation_xnnz, & validation_y, 
+                                             & validation_xnnz, & validation_y,
                                              & validation_sample_weight)
                     self._sgd_lambda_step(validation_x_data_ptr, validation_x_ind_ptr,
                                           validation_xnnz, validation_y)
             if self.verbose > 0:
                 error_type = "RMSE" if self.task == REGRESSION else "log loss"
-                print "Training %s: %.5f" % (error_type, (self.sumloss / self.count))
+                print("Training %s: %.5f" % (error_type, (self.sumloss / self.count)))
+
+    def __reduce__(self):
+        """Reduce re-implementation, for pickling."""
+        return (FM_fast, (self.w, self.v, self.num_factors, self.num_attributes,
+                          self.n_iter, self.k0, self.k1,
+                          self.w0, self.t, self.t0, self.power_t,
+                          self.min_target, self.max_target,
+                          self.learning_rate, self.learning_rate_schedule,
+                          self.shuffle_training, self.task,
+                          self.seed, self.verbose), self.__getstate__())
+
+    def __getstate__(self):
+        """Getstate re-implementation, for pickling."""
+        d = {}
+        d["grad_w"] = self.grad_w
+        d["grad_v"] = self.grad_v
+        d["reg_0"] = self.reg_0
+        d["reg_w"] = self.reg_w
+        d["reg_v"] = self.reg_v
+        d["sumloss"] = self.sumloss
+        d["count"] = self.count
+        return d
+
+    def __setstate__(self, d):
+        """Setstate re-implementation, for unpickling."""
+        self.grad_w = d["grad_w"]
+        self.grad_v = d["grad_v"]
+        self.reg_0 = d["reg_0"]
+        self.reg_w = d["reg_w"]
+        self.reg_v = d["reg_v"]
+        self.sumloss = d["sumloss"]
+        self.count = d["count"]
+
 
 cdef inline double max(double a, double b):
     return a if a >= b else b
 
+
 cdef inline double min(double a, double b):
     return a if a <= b else b
+
 
 cdef _log_loss(DOUBLE p, DOUBLE y):
     cdef DOUBLE z
@@ -460,7 +496,8 @@ cdef _log_loss(DOUBLE p, DOUBLE y):
 cdef _squared_loss(DOUBLE p, DOUBLE y):
     return 0.5 * (p - y) * (p - y)
 
-cdef class CSRDataset:
+
+cdef class CSRDataset(object):
     """An sklearn ``SequentialDataset`` backed by a scipy sparse CSR matrix. This is an ugly hack for the moment until I find the best way to link to sklearn. """
 
     cdef Py_ssize_t n_samples
