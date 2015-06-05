@@ -32,7 +32,17 @@ class EnrollmentFeatureExtractor(FeatureExtractor):
                 .extract_active_days()\
                 .extract_active_days_per_week()\
                 .extract_fst_day()\
-                .extract_lst_day()
+                .extract_lst_day()\
+                .extract_request_lag_min()\
+                .extract_request_lag_max()\
+                .extract_request_lag_mean()\
+                .extract_request_lag_var()\
+                .extract_request_hours()\
+                .extract_request_hour_count()\
+                .extract_request_hour_mean()\
+                .extract_request_hour_var()\
+                .extract_request_weekend_count()\
+                .extract_request_weekend_percentage()
 
     def _tuple_generator(self, iter):
         for line in iter:
