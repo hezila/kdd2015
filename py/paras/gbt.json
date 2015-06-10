@@ -1,0 +1,8 @@
+{"min_loss_reduction": 0.8,
+        "step_size": 0.01,
+        "min_child_weight": 8,
+        "column_subsample": 0.5,
+        "row_subsample": 0.9,
+        "max_depth": 8,
+        "max_iterations": 500,
+        "class_weights": "auto"}

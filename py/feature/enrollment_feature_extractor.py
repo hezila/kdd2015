@@ -30,19 +30,42 @@ class EnrollmentFeatureExtractor(FeatureExtractor):
             yield bag.extract_duration_days()\
                 .extract_request_count()\
                 .extract_active_days()\
-                .extract_active_days_per_week()\
+                .extract_avg_active_days()\
                 .extract_fst_day()\
                 .extract_lst_day()\
                 .extract_request_lag_min()\
                 .extract_request_lag_max()\
                 .extract_request_lag_mean()\
                 .extract_request_lag_var()\
+                .extract_request_lag_3days()\
+                .extract_request_lag_5days()\
+                .extract_request_lag_1week()\
                 .extract_request_hours()\
                 .extract_request_hour_count()\
                 .extract_request_hour_mean()\
                 .extract_request_hour_var()\
                 .extract_request_weekend_count()\
-                .extract_request_weekend_percentage()
+                .extract_request_weekend_percentage()\
+                .extract_session_mean()\
+                .extract_session_var()\
+                .extract_staytime_min()\
+                .extract_staytime_max()\
+                .extract_staytime_mean()\
+                .extract_staytime_var()\
+                .extract_event_count()\
+                .extract_event_percentage()\
+                .extract_video_over10minutes_count()\
+                .extract_problem_over3minutes_count()\
+                .extract_request_count_lst3weeks()\
+                .extract_event_count_lst3weeks()\
+                .extract_activedays_lst3weeks()\
+                .extract_avg_activedays_lst3weeks()\
+                .extract_month_fst_access()\
+                .extract_month_lst_access()\
+                .extract_event_days_per_week()\
+                .extract_video_over10minutes_count_per_week()\
+                .extract_problem_over3minutes_count_per_week()\
+                .extract_source_count()
 
     def _tuple_generator(self, iter):
         for line in iter:

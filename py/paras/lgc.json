@@ -1,0 +1,7 @@
+{
+    "penalty": "l2",
+    "max_iter": 2000,
+    "C": 3,
+    "intercept_scaling": 5,
+    "solver": "liblinear"
+}
