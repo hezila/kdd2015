@@ -135,8 +135,11 @@ def random_split(dataset, labels, test_size = 0.2):
     sss = StratifiedShuffleSplit(labels, test_size=test_size, random_state=31415)
     for train_index, test_index in sss:
         break
-    train_x, train_y  = dataset.values[train_index], labels[train_index]
-    test_x, test_y = dataset.values[test_index], labels[test_index]
+    data = dataset
+    if isinstance(dataset, pd.DataFrame):
+        data = dataset.values
+    train_x, train_y  = data[train_index], labels[train_index]
+    test_x, test_y = data[test_index], labels[test_index]
 
     return (train_x, train_y, test_x, test_y)
 

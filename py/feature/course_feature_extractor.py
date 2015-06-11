@@ -7,6 +7,7 @@ import os
 from course_feature_bag import CourseFeatureBag
 from feature_extractor import FeatureExtractor
 from utils import *
+from data import *
 
 __author__ = 'Feng Wang (Felix)'
 __email__ = 'wangfelix87@gmail.com'
@@ -14,8 +15,10 @@ __date__ = '06-04-2015'
 
 base_dir = os.path.dirname(__file__)
 
+
+
 class CourseFeatureExtractor(FeatureExtractor):
-    def __init__(self, mode, data_type, log_csv_path, enrollment_path, label_path, feature_path, debug_limit):
+    def __init__(self, mode, data_type, log_csv_path, enrollment_path, label_path, module_path, feature_path, debug_limit):
         labels = {}
         with open(label_path, 'r') as r:
             for line in r:
@@ -48,7 +51,8 @@ class CourseFeatureExtractor(FeatureExtractor):
 
         self.course_db = course_db
 
-
+        self.module_db = load_modules(module_path)
+        self.module_db.order_modules()
 
         FeatureExtractor.__init__(self, mode, data_type, log_csv_path, feature_path, debug_limit)
 
@@ -65,8 +69,11 @@ class CourseFeatureExtractor(FeatureExtractor):
         for bag in iter:
             yield bag.extract_course_audience(self.course_db)\
                 .extract_course_drop(self.course_db)\
-                .extract_course_dropratio(self.course_db)
-
+                .extract_course_dropratio(self.course_db)\
+                .extract_left_module_count(self.module_db)\
+                .extract_course_finish(self.module_db)\
+                .extract_lag_nextmodule(self.module_db)\
+                .extract_lag_lastmodule(self.module_db)
 
     def _tuple_generator(self, iter):
         for line in iter:

@@ -35,6 +35,7 @@ class Module:
     def get_children(self):
         return self.children
 
+
 class ModuleDB:
     def __init__(self):
         self.cate_by_mid = {}
@@ -53,6 +54,21 @@ class ModuleDB:
         self.modules_by_cid.setdefault(cid, []).append(mid)
         for c in module.get_children():
             self.parent_by_mid[c] = mid
+            if c not in self.modules_by_cid[cid]:
+                self.modules_by_cid[cid].append(c)
+
+    def order_modules(self):
+        for cid in self.modules_by_cid.keys():
+            modules = [(mid, self.get_start(mid)) for mid in self.modules_by_cid[cid] if self.get_start(mid) is not None]
+            modules = sorted([(m, t) for m, t in modules if self.get_cate(m) in ['chapter', 'sequential']], key=lambda x: x[1])
+            self.modules_by_cid[cid] = [m for m, t in modules]
+
+    def get_rank(self, cid, mid):
+        ms = self.modules_by_cid[cid]
+        if mid in ms:
+            return ms.index(mid) + 1
+        else:
+            return None
 
     def get_cate(self, mid):
         m = self.modules[mid]
@@ -71,11 +87,11 @@ class ModuleDB:
         start = m.get_start()
         if start is None:
             p = self.get_parent(m)
-            if p:
+            if p and self.get_cate(p) in ['chapter', 'sequential']:
                 start = self.get_start(p)
                 if start is None:
                     p = self.get_parent(p)
-                    if p and self.get_cate(p) == 'chapter':
+                    if p and self.get_cate(p) in ['chapter', 'sequential']:
                         start = self.get_start(p)
                     return start
                 else:

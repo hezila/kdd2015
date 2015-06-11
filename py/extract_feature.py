@@ -45,7 +45,7 @@ def main():
     if target == 'enrollment':
         extractor = EnrollmentFeatureExtractor(mode, data_type, log_path, feature_path, debug_limit)
     elif target == 'course':
-        extractor = CourseFeatureExtractor(mode, data_type, log_path, enrollment_path, label_path, feature_path, debug_limit)
+        extractor = CourseFeatureExtractor(mode, data_type, log_path, enrollment_path, label_path, object_path, feature_path, debug_limit)
     # elif target == 'module':
     #     extractor = ModuleFeatureExtractor(mode, data_type, log_path, object_path, feature_path, debug_limit)
     else:

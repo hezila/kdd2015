@@ -397,7 +397,7 @@ class ModuleFeatureBag(FeatureBag):
         return self
 
     def extract_module_backjumps(self, module_db):
-        mids = sorted([(log['object'], log['time']) for log in self.logs if log['event'] == 'access'], lambda x: x[1])
+        mids = sorted([(log['object'], log['time']) for log in self.logs if log['event'] == 'access'], key=lambda x: x[1])
         release_times = {}
         for mid, at in mids:
             s = module_db.get_start(mid)
@@ -407,6 +407,8 @@ class ModuleFeatureBag(FeatureBag):
         last_r = 1
         cnt = 0.0
         for mid, at in mids:
+            if mid not in orders:
+                continue
             r = orders.index(mid) + 1
             if r < last_r:
                 cnt += 1.0

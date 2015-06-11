@@ -157,6 +157,72 @@ def create_clf(name, paras=None):
                                         max_iterations  = max_iterations)
         return gbtcf
 
+def fit_weight(cds, X, y, n_folds = 5):
+    folds_preds = []
+    i = 0
+    for tr_x, tr_y, va_x, va_y in folds_split(X, y, n_folds= n_folds):
+        clf_preds = {}
+        for name, clf in cds:
+            clf.fit(tr_x, tr_y)
+            yhat = clf.predict_proba(va_x)
+            clf_preds[name] = yhat[:,1]
+
+            clf.model = None
+            n = gc.collect()
+
+        print '%d/%d folds' % ((i+1), n_folds)
+        folds_preds.append((va_y, clf_preds))
+        i += 1
+    print 'end of fitting ...'
+
+    weights = {}
+    name, clf = cds[0]
+    weights[name] = 1.0
+
+    sw = 1.0
+    cul_preds = []
+    for va_y, preds in folds_preds:
+        cul_preds.append(preds[name])
+
+
+    j = 1
+    while j < len(cds):
+        name, clf = cds[j]
+        candi_weights = [0.0, 0.01, 0.02, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.3, 1.5, 1.8, 2.0]
+
+        add_preds = []
+        for n, fpreds in enumerate(folds_preds):
+            va_y, preds = fpreds
+            add_preds.append(preds[name])
+
+        best_w = 0
+        best_auc = 0
+        for w in candi_weights:
+            new_w = sw + w
+            quality = 0.0
+            for n, fpreds in enumerate(folds_preds):
+                va_y, preds = fpreds
+                new_pred = (cul_preds[n] + w * add_preds[n]) / (sw + w)
+                roc_auc = cal_auc(va_y, new_pred)
+                quality += roc_auc
+            quality = quality / n_folds
+
+            if quality > best_auc:
+                best_auc = quality
+                best_w = w
+
+        for n, fpreds in enumerate(folds_preds):
+            va_y, preds = fpreds
+            cul_preds[n] += best_w * add_preds[n]
+        sw += best_w
+        weights[name] = best_w
+        print '%s: %f (%f)' % (name, best_w, best_auc)
+
+        j += 1
+
+    return weights
+
+
 def main():
     usage = "usage prog [options] arg"
     parser = OptionParser(usage=usage)
@@ -320,8 +386,8 @@ def main():
         # tsne = TSNE(n_components=50, random_state=0)
         # train_x = tsne.fit_transform(train_x)
 
-        new_train_x, new_test_x = cluster_encode(train_x, test_x, codebook="gmm", k=50)
-        train_x = np.hstack((train_x, new_train_x))
+        # new_train_x, new_test_x = cluster_encode(train_x, test_x, codebook="gmm", k=50)
+        # train_x = np.hstack((train_x, new_train_x))
 
 
         paras = json.load(open(options.paras, 'r'))
@@ -347,14 +413,14 @@ def main():
         test_x = test_x.drop(drops, axis=1)
         cols = train_x.columns
 
-        scaler = StandardScaler(copy=True)  # always copy input data (don't modify in-place)
-        # train_x = scaler.fit(train_x).transform(train_x)
-
-        X = np.vstack((train_x, test_x))
-        scaler.fit(X)
-
-        train_x = scaler.transform(train_x)
-        test_x = scaler.transform(test_x)
+        # scaler = StandardScaler(copy=True)  # always copy input data (don't modify in-place)
+        # # train_x = scaler.fit(train_x).transform(train_x)
+        #
+        # X = np.vstack((train_x, test_x))
+        # scaler.fit(X)
+        #
+        # train_x = scaler.transform(train_x)
+        # test_x = scaler.transform(test_x)
 
         paras = json.load(open(options.paras, 'r'))
 
@@ -408,10 +474,10 @@ def main():
 
         # Project data through a forest of totall randomized trees
         # and use the leafs the samples end into as a hight-dimensional representation
-        hasher = RandomTreesEmbedding(n_estimators=100)
-        hasher.fit(X)
-        train_x = hasher.transform(train_x)
-        test_x = hasher.transform(test_x)
+        # hasher = RandomTreesEmbedding(n_estimators=100)
+        # hasher.fit(X)
+        # train_x = hasher.transform(train_x)
+        # test_x = hasher.transform(test_x)
 
         # svd = TruncatedSVD(n_components=100)
         # train_x = svd.fit_transform(train_x)
@@ -447,32 +513,65 @@ def main():
 
     elif model == 'stacking':
         log_transf_replace(train_x, log_ftrs)
+        log_transf_replace(test_x, log_ftrs)
+        # transf = NormTransformer(cols)
+        # transf.fit_transform(train_x)
 
-        transf = NormTransformer(cols)
-        transf.fit_transform(train_x)
+        train_x = train_x.drop(drops, axis=1)
+        test_x = test_x.drop(drops, axis=1)
+        cols = train_x.columns
+
+        scaler = StandardScaler(copy=True)  # always copy input data (don't modify in-place)
+        # train_x = scaler.fit(train_x).transform(train_x)
+
+        X = np.vstack((train_x, test_x))
+        scaler.fit(X)
+
+        train_x = scaler.transform(train_x)
+        test_x = scaler.transform(test_x)
+
+        tr_x, tr_y, tt_x, tt_y = random_split(train_x, y)
+
 
         paras = json.load(open("paras/lgc.json", 'r'))
         lgc = create_clf('lgc', paras)
-        lgc.fit(train_x, y)
-        lgc_preds = lgc.predict_proba(train_x)[:,1]
-        train_x['lgc_pred'] = lgc_preds
+        lgc.fit(tr_x, tr_y)
+        tr_lgc_preds = lgc.predict_proba(tr_x)[:,1]
+        tt_lgc_preds = lgc.predict_proba(tt_x)[:,1]
+
+        # train_x['lgc_pred'] = lgc_preds
 
         paras = json.load(open("paras/rfc.json", 'r'))
         paras['random_state'] = 314
         rfc = create_clf("rfc", paras)
-        rfc.fit(train_x, y)
-        rfc_preds = rfc.predict_proba(train_x)[:,1]
-        train_x['rfc_pred1'] = rfc_preds
+        rfc.fit(tr_x, tr_y)
+        tr_rfc_preds1 = rfc.predict_proba(tr_x)[:,1]
+        tt_rfc_preds1 = rfc.predict_proba(tt_x)[:,1]
+        # train_x['rfc_pred1'] = rfc_preds
 
-        paras['random_state'] = 159
-        rfc = create_clf("rfc", paras)
-        rfc.fit(train_x, y)
-        preds = rfc.predict_proba(train_x)[:,1]
-        train_x['rfc_pred2'] = preds
+        # paras['random_state'] = 159
+        # rfc = create_clf("rfc", paras)
+        # rfc.fit(train_x, y)
+        # preds = rfc.predict_proba(train_x)[:,1]
+        # train_x['rfc_pred2'] = preds
+
+        tr_x = np.hstack((tr_x, tr_lgc_preds))
+        tr_x = np.hstack((tr_x, tr_rfc_pred2))
+
+        tt_x = np.hstack((tt_x, tt_lgc_preds))
+        tt_x = np.hstack((tt_x, tt_rfc_pred2))
+
+
+        # tr_x['lgc_pred'] = lgc_preds
+        # tr_x['rfc_pred1'] = rfc_preds1
 
         xgb = create_clf('xgb', paras)
-        auc = cv_loop(train_x, y, xgb, n_folds = 5, verbose=False)
-        print 'Avg AUC: %f' % auc
+        xgb.fit(tr_x, tr_y)
+        preds = xgb.predict_proba(tt_x)[:,1]
+        auc = cal_auc(tt_y, preds)
+        print "AUC: %f" % auc
+        # auc = cv_loop(tr_x, tr_y, xgb, n_folds = 5, verbose=False)
+        # print 'Avg AUC: %f' % auc
 
     elif model == 'submit':
 
@@ -553,6 +652,42 @@ def main():
             # print '%d, %.6f' % (k, p)
             output.write('%d,%.6f\n' % (k, p))
         output.close()
+
+    elif model == 'fitw':
+        log_transf_replace(train_x, log_ftrs)
+        log_transf_replace(test_x, log_ftrs)
+        # transf = NormTransformer(cols)
+        # transf.fit_transform(train_x)
+
+        train_x = train_x.drop(drops, axis=1)
+        test_x = test_x.drop(drops, axis=1)
+        cols = train_x.columns
+
+        scaler = StandardScaler(copy=True)  # always copy input data (don't modify in-place)
+        # train_x = scaler.fit(train_x).transform(train_x)
+
+        X = np.vstack((train_x, test_x))
+        scaler.fit(X)
+
+        train_x = scaler.transform(train_x)
+        test_x = scaler.transform(test_x)
+
+        cds = []
+
+        xgb = create_clf('xgb', None)
+        cds.append(('xgb', xgb))
+
+        paras = json.load(open("paras/rfc.json", 'r'))
+        rfc = create_clf("rfc", paras)
+        cds.append(('rfc', rfc))
+
+        paras = json.load(open("paras/lgc.json", 'r'))
+        lgc = create_clf('lgc', paras)
+        cds.append(('lgc', lgc))
+
+
+        print fit_weight(cds, train_x, y, n_folds = 3)
+
 
 if __name__ == '__main__':
     main()
