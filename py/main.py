@@ -28,7 +28,7 @@ from classifier.logistic import LogisticClassifier
 from classifier.rfc import RFCClassifier
 from classifier.svc import SVCClassifier
 from classifier.pua import PUAdapter
-#from classifier.mlp import MLPClassifier
+from classifier.mlp import MLPClassifier
 from classifier.xgb import XGBClassifier
 from classifier.glbtc import BoostedTreesClassifier
 
@@ -129,9 +129,9 @@ def create_clf(name, paras=None):
     elif name == 'puc':
         pu = PUAdapter()
         return pu
-    # elif name == 'mlp':
-    #     mlp = MLPClassifier()
-    #     return mlp
+    elif name == 'mlp':
+        mlp = MLPClassifier()
+        return mlp
     elif name == 'xgb':
         xgb = XGBClassifier()
         return xgb
@@ -437,6 +437,25 @@ def main():
         print 'Avg AUC: %f' % auc
 
     elif model == 'puc': # PU learning
+        log_transf(train_x, log_ftrs)
+        log_transf(test_x, log_ftrs)
+
+        # transf = NormTransformer(cols)
+        # transf.fit_transform(train_x)
+
+        train_x = train_x.drop(drops, axis=1)
+        test_x = test_x.drop(drops, axis=1)
+        cols = train_x.columns
+
+        scaler = StandardScaler(copy=True)  # always copy input data (don't modify in-place)
+        # train_x = scaler.fit(train_x).transform(train_x)
+
+        X = np.vstack((train_x, test_x))
+        scaler.fit(X)
+
+        train_x = scaler.transform(train_x)
+        test_x = scaler.transform(test_x)
+
         pu = create_clf(model, None)
 
         # train_x = train_x.append(test, ignore_index=True)
@@ -446,10 +465,6 @@ def main():
         # y[np.where(y == 0)[0]] = 1
         # y[np.where(y == -1)[0]] = 0
 
-        log_transf_replace(train_x, log_ftrs)
-
-        transf = NormTransformer(cols)
-        transf.fit_transform(train_x)
 
         auc = cv_loop(train_x, y, pu, n_folds = 5, verbose=False)
         print 'Avg AUC: %f' % auc
@@ -528,6 +543,37 @@ def main():
 
         auc = cv_loop(train_x, y, gbt, n_folds = 5, verbose=False)
         print 'Avg AUC: %f' % auc
+    elif model == 'mlp':
+        log_transf_replace(train_x, log_ftrs)
+        log_transf_replace(test_x, log_ftrs)
+
+        # transf = NormTransformer(cols)
+        # transf.fit_transform(train_x)
+
+        train_x = train_x.drop(drops, axis=1)
+        test_x = test_x.drop(drops, axis=1)
+        cols = train_x.columns
+
+        scaler = StandardScaler(copy=True)  # always copy input data (don't modify in-place)
+        # train_x = scaler.fit(train_x).transform(train_x)
+
+        X = np.vstack((train_x, test_x))
+        scaler.fit(X)
+
+        train_x = scaler.transform(train_x)
+        test_x = scaler.transform(test_x)
+
+        mlp = create_clf(model, None)
+
+        # test_clf(train_x, y, lgc)
+
+        # print "Features sorted by their coefficients:"
+        # print sorted(zip(map(lambda x: round(x, 4), lgc.coefficients()),
+        #          cols), reverse=True)
+
+        auc = cv_loop(train_x, y, mlp, n_folds = 5, verbose=False)
+        print 'Avg AUC: %f' % auc
+
 
     elif model == 'stacking':
         log_transf_replace(train_x, log_ftrs)

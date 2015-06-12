@@ -42,16 +42,19 @@ class MLPClassifier(BaseClassifier):
         nn = Classifier(
                 layers=[
                     # Convolution("Rectifier", channels=10, pool_shape=(2,2), kernel_shape=(3, 3)),
-                    Layer('Rectifier', units=100),
+                    Layer('Rectifier', units=100, dropout=0.25),
+                    Layer('Sigmoid', units=80, dropout=0.25),
+                    Layer("Maxout", units=60, pieces=8),
                     Layer('Softmax')],
-                learning_rate=0.02,
+                learning_rate=0.01,
                 learning_rule='momentum',
                 learning_momentum=0.9,
                 batch_size=25,
                 valid_set=None,
                 # valid_set=(X_test, y_test),
+                valid_size = 0.2,
                 n_stable=10,
-                n_iter=10,
+                n_iter=100,
                 verbose=True)
         nn.fit(X, y)
 

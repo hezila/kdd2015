@@ -31,7 +31,7 @@ class EnrollmentFeatureExtractor(FeatureExtractor):
                 .extract_request_count()\
                 .extract_active_days()\
                 .extract_avg_active_days()\
-                .extract_fst_day()\
+                #.extract_fst_day()\
                 .extract_lst_day()\
                 .extract_request_lag_min()\
                 .extract_request_lag_max()\
