@@ -38,8 +38,11 @@ class EnrollmentFeatureExtractor(FeatureExtractor):
                 .extract_request_lag_mean()\
                 .extract_request_lag_var()\
                 .extract_request_lag_3days()\
+                .extract_request_lag_3days_ratio()\
                 .extract_request_lag_5days()\
+                .extract_request_lag_5days_ratio()\
                 .extract_request_lag_1week()\
+                .extract_request_lag_1week_ratio()\
                 .extract_request_hours()\
                 .extract_request_hour_count()\
                 .extract_request_hour_mean()\
@@ -52,14 +55,23 @@ class EnrollmentFeatureExtractor(FeatureExtractor):
                 .extract_staytime_max()\
                 .extract_staytime_mean()\
                 .extract_staytime_var()\
-                .extract_event_count()\
+                .extract_server_event_count()\
+                .extract_browser_event_count()\
                 .extract_event_percentage()\
                 .extract_video_over10minutes_count()\
+                .extract_video_over10minutes_count_lst3week()\
                 .extract_problem_over3minutes_count()\
+                .extract_problem_over3minutes_count_lst3week()\
                 .extract_request_count_lst3weeks()\
-                .extract_event_count_lst3weeks()\
+                .extract_request_count_lst2weeks()\
+                .extract_server_event_count_lst3weeks()\
+                .extract_server_event_count_lst2weeks()\
+                .extract_browser_event_count_lst3weeks()\
+                .extract_browser_event_count_lst2weeks()\
                 .extract_activedays_lst3weeks()\
+                .extract_activedays_lst2weeks()\
                 .extract_avg_activedays_lst3weeks()\
+                .extract_avg_activedays_lst2weeks()\
                 .extract_month_fst_access()\
                 .extract_month_lst_access()\
                 .extract_event_days_per_week()\

@@ -13,20 +13,21 @@ class XGBClassifier(BaseClassifier):
 
     """
 
-    def __init__(self, max_depth=5,
-                    learning_rate=0.1,
-                    n_estimators=150,
+    def __init__(self, max_depth=8,
+                    learning_rate=0.01,
+                    n_estimators=500,
                     silent=True,
                     objective="binary:logistic",
                     nthread= 8,
-                    gamma=0.5,
+                    gamma=0.3,
                     min_child_weight=1,
                     max_delta_step=0,
-                    subsample=1,
-                    colsample_bytree=1,
-                    base_score=0.8,
+                    subsample=0.6,
+                    colsample_bytree=0.6,
+                    base_score=0.7,
                     seed=0,
-                    missing=None
+                    missing=None,
+                    class_weight = 'auto'
                     ):
 
         self.n_estimators = n_estimators
@@ -37,6 +38,9 @@ class XGBClassifier(BaseClassifier):
         self.base_score = base_score
         self.gamma = gamma
         self.nthread = nthread
+        self.subsample = subsample
+        self.colsample_bytree = colsample_bytree
+        self.class_weight = class_weight
 
     def fpreproc(self, dtrain, param):
         label = dtrain.get_label()
@@ -74,12 +78,17 @@ class XGBClassifier(BaseClassifier):
                                 gamma=self.gamma,
                                 min_child_weight=self.min_child_weight,
                                 max_delta_step=0,
-                                subsample=0.8,
-                                colsample_bytree=0.6,
+                                subsample= self.subsample,
+                                colsample_bytree= self.colsample_bytree,
                                 base_score=self.base_score,
                                 seed=0)
+        weights = None
+        if self.class_weight and self.class_weight == 'auto':
+            weights = np.ones(len(y))
+            ratio = float(np.sum(y == 1)) / np.sum(y==0)
+            weights[y==0] = ratio
 
-        clf = clf.fit(X, y)
+        clf = clf.fit(X, y, weights)
 
         self.model = clf
 

@@ -355,7 +355,8 @@ def main():
 
     elif model == 'lgc' or model == 'svc': # logistic regression
 
-        log_transf_replace(train_x, log_ftrs)
+        log_transf(train_x, log_ftrs)
+        log_transf(test_x, log_ftrs)
 
         # transf = NormTransformer(cols)
         # transf.fit_transform(train_x)
@@ -454,7 +455,11 @@ def main():
         print 'Avg AUC: %f' % auc
 
     elif model == 'xgb': # xgboost
-        log_transf_replace(train_x, log_ftrs)
+        log_transf(train_x, log_ftrs)
+        log_transf(test_x, log_ftrs)
+
+        # inverse_transf(train_x, cols)
+        # inverse_transf(test_x, cols)
 
         # transf = NormTransformer(cols)
         # transf.fit_transform(train_x)
@@ -463,14 +468,13 @@ def main():
         test_x = test_x.drop(drops, axis=1)
         cols = train_x.columns
 
-        scaler = StandardScaler(copy=True)  # always copy input data (don't modify in-place)
-        # train_x = scaler.fit(train_x).transform(train_x)
-
-        X = np.vstack((train_x, test_x))
-        scaler.fit(X)
-
-        train_x = scaler.transform(train_x)
-        test_x = scaler.transform(test_x)
+        # scaler = StandardScaler(copy=True)  # always copy input data (don't modify in-place)
+        #
+        # X = np.vstack((train_x, test_x))
+        # scaler.fit(X)
+        #
+        # train_x = scaler.transform(train_x)
+        # test_x = scaler.transform(test_x)
 
         # Project data through a forest of totall randomized trees
         # and use the leafs the samples end into as a hight-dimensional representation
@@ -499,10 +503,24 @@ def main():
         auc = cv_loop(train_x, y, xgb, n_folds = 5, verbose=False)
         print 'Avg AUC: %f' % auc
     elif model == 'gbt':
-        log_transf_replace(train_x, log_ftrs)
+        log_transf(train_x, log_ftrs)
+        log_transf(test_x, log_ftrs)
 
-        transf = NormTransformer(cols)
-        transf.fit_transform(train_x)
+        # transf = NormTransformer(cols)
+        # transf.fit_transform(train_x)
+
+        train_x = train_x.drop(drops, axis=1)
+        test_x = test_x.drop(drops, axis=1)
+        cols = train_x.columns
+
+        scaler = StandardScaler(copy=True)  # always copy input data (don't modify in-place)
+        # train_x = scaler.fit(train_x).transform(train_x)
+
+        X = np.vstack((train_x, test_x))
+        scaler.fit(X)
+
+        train_x = scaler.transform(train_x)
+        test_x = scaler.transform(test_x)
 
         paras = json.load(open(options.paras, 'r'))
 
@@ -654,8 +672,8 @@ def main():
         output.close()
 
     elif model == 'fitw':
-        log_transf_replace(train_x, log_ftrs)
-        log_transf_replace(test_x, log_ftrs)
+        log_transf(train_x, log_ftrs)
+        log_transf(test_x, log_ftrs)
         # transf = NormTransformer(cols)
         # transf.fit_transform(train_x)
 
