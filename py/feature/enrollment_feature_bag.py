@@ -23,9 +23,7 @@ class EnrollmentFeatureBag(FeatureBag):
 
     def extract_duration_days(self):
         request_dates = sorted(list(set([log['time'].strftime('%Y%m%d') for log in self.logs])))
-        start_date = datetime.strptime(request_dates[-1], '%Y%m%d') - datetime.datetime.timedelta(days=21)
         request_dates = [datetime.datetime.strptime(d, '%Y%m%d') for d in request_dates]
-        request_dates = [d for d in request_dates if d >= start_date]
         duration = (request_dates[-1] - request_dates[0]).days
         if duration == 0:
             duration = 1.0
@@ -33,31 +31,26 @@ class EnrollmentFeatureBag(FeatureBag):
         self.feature_values.append(duration + 0.0)
         return self
 
-    def extract_request_count(self):
-        request_dates = sorted([log['time'] for log in self.logs])
-        start_date = request_dates[-1] - datetime.datetime.timedelta(days=21)
-        request_dates = [d for d in request_dates if d >= start_date]
-
+    def extract_request_count(self, skip_events=[]):
         self.feature_keys.append("request_count")
-        self.feature_values.append(len(request_dates))
-
+        if len(skip_events) == 0:
+            self.feature_values.append(len(self.logs))
+        else:
+            x = sum(1 for log in self.logs if log['event'] not in skip_events)
+            self.feature_values.append(x + 0.0)
         return self
 
     def extract_active_days(self):
         request_dates = set([log['time'].strftime('%Y%m%d') for log in self.logs])
-        request_dates = sorted(list(request_dates))
-        start_date = request_dates[-1] - datetime.datetime.timedelta(days=21)
-        request_dates = [d for d in request_dates if d >= start_date]
         self.feature_keys.append('active_days')
         self.feature_values.append(len(request_dates) + 0.0)
         return self
 
     def extract_avg_active_days(self):
         request_dates = set([log['time'].strftime('%Y%m%d') for log in self.logs])
-        request_dates = sorted(list(request_dates))
-        start_date = request_dates[-1] - datetime.datetime.timedelta(days=21)
-        request_dates = [d for d in request_dates if d >= start_date]
         active_days = len(request_dates)
+        request_dates = sorted(list(request_dates))
+        request_dates = [datetime.datetime.strptime(d, '%Y%m%d') for d in request_dates]
         duration = (request_dates[-1] - request_dates[0]).days
         if duration == 0:
             duration = 1.0
@@ -71,12 +64,12 @@ class EnrollmentFeatureBag(FeatureBag):
 
 
 
-    # def extract_fst_day(self):
-    #     request_dates = sorted(list(set([log['time'].strftime('%Y%m%d') for log in self.logs])))
-    #     fst_day = request_dates[0]
-    #     self.feature_keys.append('fst_day')
-    #     self.feature_values.append(fst_day)
-    #     return self
+    def extract_fst_day(self):
+        request_dates = sorted(list(set([log['time'].strftime('%Y%m%d') for log in self.logs])))
+        fst_day = request_dates[0]
+        self.feature_keys.append('fst_day')
+        self.feature_values.append(fst_day)
+        return self
 
     def extract_lst_day(self):
         request_dates = sorted(list(set([log['time'].strftime('%Y%m%d') for log in self.logs])))
@@ -88,8 +81,6 @@ class EnrollmentFeatureBag(FeatureBag):
     def extract_request_lag_min(self):
         request_dates = sorted(list(set([log['time'].strftime('%Y%m%d') for log in self.logs])))
         request_dates = [datetime.datetime.strptime(d, '%Y%m%d') for d in request_dates]
-        start = request_dates[-1] - datetime.datetime.timedelta(days=21)
-        request_dates = [d for d in request_dates if d >= start]
         if len(request_dates) == 1:
             lags = [1] # one day in this case
         else:
@@ -101,8 +92,6 @@ class EnrollmentFeatureBag(FeatureBag):
     def extract_request_lag_max(self):
         request_dates = sorted(list(set([log['time'].strftime('%Y%m%d') for log in self.logs])))
         request_dates = [datetime.datetime.strptime(d, '%Y%m%d') for d in request_dates]
-        start = request_dates[-1] - datetime.datetime.timedelta(days=21)
-        request_dates = [d for d in request_dates if d >= start]
         if len(request_dates) == 1:
             lags = [1]
         else:
@@ -115,8 +104,6 @@ class EnrollmentFeatureBag(FeatureBag):
     def extract_request_lag_mean(self):
         request_dates = sorted(list(set([log['time'].strftime('%Y%m%d') for log in self.logs])))
         request_dates = [datetime.datetime.strptime(d, '%Y%m%d') for d in request_dates]
-        start = request_dates[-1] - datetime.datetime.timedelta(days=21)
-        request_dates = [d for d in request_dates if d >= start]
         if len(request_dates) == 1:
             lags = [1]
         else:
@@ -128,8 +115,6 @@ class EnrollmentFeatureBag(FeatureBag):
     def extract_request_lag_var(self):
         request_dates = sorted(list(set([log['time'].strftime('%Y%m%d') for log in self.logs])))
         request_dates = [datetime.datetime.strptime(d, '%Y%m%d') for d in request_dates]
-        start = request_dates[-1] - datetime.datetime.timedelta(days=21)
-        request_dates = [d for d in request_dates if d >= start]
         if len(request_dates) == 1:
             var = 3.0
         elif len(request_dates) == 2:
@@ -145,8 +130,6 @@ class EnrollmentFeatureBag(FeatureBag):
     def extract_request_lag_3days(self):
         request_dates = sorted(list(set([log['time'].strftime('%Y%m%d') for log in self.logs])))
         request_dates = [datetime.datetime.strptime(d, '%Y%m%d') for d in request_dates]
-        start = request_dates[-1] - datetime.datetime.timedelta(days=21)
-        request_dates = [d for d in request_dates if d >= start]
 
         if len(request_dates) == 1:
             lags = [1]
@@ -165,8 +148,7 @@ class EnrollmentFeatureBag(FeatureBag):
     def extract_request_lag_3days_ratio(self):
         request_dates = sorted(list(set([log['time'].strftime('%Y%m%d') for log in self.logs])))
         request_dates = [datetime.datetime.strptime(d, '%Y%m%d') for d in request_dates]
-        start = request_dates[-1] - datetime.datetime.timedelta(days=21)
-        request_dates = [d for d in request_dates if d >= start]
+
         if len(request_dates) == 1:
             lags = [1]
         else:
@@ -184,8 +166,7 @@ class EnrollmentFeatureBag(FeatureBag):
     def extract_request_lag_5days(self):
         request_dates = sorted(list(set([log['time'].strftime('%Y%m%d') for log in self.logs])))
         request_dates = [datetime.datetime.strptime(d, '%Y%m%d') for d in request_dates]
-        start = request_dates[-1] - datetime.datetime.timedelta(days=21)
-        request_dates = [d for d in request_dates if d >= start]
+
         if len(request_dates) == 1:
             lags = [1]
         else:
@@ -203,8 +184,7 @@ class EnrollmentFeatureBag(FeatureBag):
     def extract_request_lag_5days_ratio(self):
         request_dates = sorted(list(set([log['time'].strftime('%Y%m%d') for log in self.logs])))
         request_dates = [datetime.datetime.strptime(d, '%Y%m%d') for d in request_dates]
-        start = request_dates[-1] - datetime.datetime.timedelta(days=21)
-        request_dates = [d for d in request_dates if d >= start]
+
         if len(request_dates) == 1:
             lags = [1]
         else:
@@ -224,8 +204,7 @@ class EnrollmentFeatureBag(FeatureBag):
     def extract_request_lag_1week(self):
         request_dates = sorted(list(set([log['time'].strftime('%Y%m%d') for log in self.logs])))
         request_dates = [datetime.datetime.strptime(d, '%Y%m%d') for d in request_dates]
-        start = request_dates[-1] - datetime.datetime.timedelta(days=21)
-        request_dates = [d for d in request_dates if d >= start]
+
         if len(request_dates) == 1:
             lags = [7]
         else:
@@ -243,8 +222,7 @@ class EnrollmentFeatureBag(FeatureBag):
     def extract_request_lag_1week_ratio(self):
         request_dates = sorted(list(set([log['time'].strftime('%Y%m%d') for log in self.logs])))
         request_dates = [datetime.datetime.strptime(d, '%Y%m%d') for d in request_dates]
-        start = request_dates[-1] - datetime.datetime.timedelta(days=21)
-        request_dates = [d for d in request_dates if d >= start]
+
         if len(request_dates) == 1:
             lags = [1]
         else:
@@ -263,10 +241,7 @@ class EnrollmentFeatureBag(FeatureBag):
 
 
     def extract_request_hours(self):
-        
-
         request_hours = sorted([log['time'].strftime('%H') for log in self.logs])
-
         counter = Counter(request_hours)
 
         # 0am - 6am
