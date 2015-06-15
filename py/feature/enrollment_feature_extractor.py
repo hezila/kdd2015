@@ -74,10 +74,11 @@ class EnrollmentFeatureExtractor(FeatureExtractor):
                 .extract_avg_activedays_lst2weeks()\
                 .extract_month_fst_access()\
                 .extract_month_lst_access()\
-                .extract_event_days_per_week()\
-                .extract_video_over10minutes_count_per_week()\
-                .extract_problem_over3minutes_count_per_week()\
                 .extract_source_count()
+
+                # .extract_event_days_per_week()\
+                # .extract_video_over10minutes_count_per_week()\
+                # .extract_problem_over3minutes_count_per_week()\
 
     def _tuple_generator(self, iter):
         for line in iter:
