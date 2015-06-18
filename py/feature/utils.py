@@ -13,6 +13,18 @@ import logging
 import functools
 
 
+# given an iterable of pairs return the key corresponding to the greatest value
+def argmax(pairs):
+    return max(pairs, key=lambda x: x[1])[0]
+
+# given an iterable of values return the index of the greatest value
+def argmax_index(values):
+    return argmax(enumerate(values))
+
+# given an iterable of keys and a function f, return the key with largest f(key)
+def argmax_f(keys, f):
+    return max(keys, key=f)
+
 def countties(Xranks, issorted = True, ztol = 1.0e-5):
 	"""
 	Returns an array of pairs (n, x) where n is the tied count and x is the
@@ -70,7 +82,7 @@ def kendall(X,Y, ztol = 1.0e-5):
 		G+= g
 	f =  0.5 * n * (n-1)
 	den = math.sqrt((f - Tx)* (f - Ty))
-    
+
 	tau = (G - L)/ den
 	return L, G, tau
 

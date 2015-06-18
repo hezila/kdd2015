@@ -241,7 +241,7 @@ def main():
 
     # train = load_dataset(options.train, options.label)
     train = merge_features(['../data/train_enrollment_feature.csv',
-                            '../data/train_course_feature.csv',
+                            # '../data/train_course_feature.csv',
                             '../data/train_module_feature.csv'
                             ], options.label)
     train = train.drop('enrollment_id', axis=1)
@@ -249,8 +249,9 @@ def main():
     train_x = train.drop('dropout', axis=1)
 
     test = merge_features( ['../data/test_enrollment_feature.csv',
-                            '../data/test_course_feature.csv',
-                            '../data/test_module_feature.csv'])
+                            # '../data/test_course_feature.csv',
+                            '../data/test_module_feature.csv'
+                            ])
 
     tt_ids = test.enrollment_id.values
     test_x = test.drop("enrollment_id", axis=1)
@@ -316,6 +317,13 @@ def main():
                 'lst_access_month_2',
                 'lst_access_month_8',
                 'lst_access_month_10',
+                'fst_day', 'lst_day',
+                'fst_access_month_3',
+                'fst_access_month_4',
+                'fst_access_month_9',
+                'lst_access_month_3',
+                'lst_access_month_4',
+                'lst_access_month_9'
                 ]
 
     # # Select features
@@ -354,25 +362,26 @@ def main():
         print 'AUC: %f' % auc
 
     elif model == 'lgc' or model == 'svc': # logistic regression
+        norm = True
+        if norm:
+            log_transf(train_x, log_ftrs)
+            log_transf(test_x, log_ftrs)
 
-        log_transf(train_x, log_ftrs)
-        log_transf(test_x, log_ftrs)
+            # transf = NormTransformer(cols)
+            # transf.fit_transform(train_x)
 
-        # transf = NormTransformer(cols)
-        # transf.fit_transform(train_x)
+            train_x = train_x.drop(drops, axis=1)
+            test_x = test_x.drop(drops, axis=1)
+            cols = train_x.columns
 
-        train_x = train_x.drop(drops, axis=1)
-        test_x = test_x.drop(drops, axis=1)
-        cols = train_x.columns
+            scaler = StandardScaler(copy=True)  # always copy input data (don't modify in-place)
+            # train_x = scaler.fit(train_x).transform(train_x)
 
-        scaler = StandardScaler(copy=True)  # always copy input data (don't modify in-place)
-        # train_x = scaler.fit(train_x).transform(train_x)
+            X = np.vstack((train_x, test_x))
+            scaler.fit(X)
 
-        X = np.vstack((train_x, test_x))
-        scaler.fit(X)
-
-        train_x = scaler.transform(train_x)
-        test_x = scaler.transform(test_x)
+            train_x = scaler.transform(train_x)
+            test_x = scaler.transform(test_x)
 
         # Project data through a forest of totall randomized trees
         # and use the leafs the samples end into as a hight-dimensional representation
@@ -405,14 +414,26 @@ def main():
         print 'Avg AUC: %f' % auc
 
     elif model == 'rfc': # random forest classifer
-        log_transf_replace(train_x, log_ftrs)
+        norm = False
+        if norm:
+            log_transf(train_x, log_ftrs)
+            log_transf(test_x, log_ftrs)
 
-        # transf = NormTransformer(cols)
-        # transf.fit_transform(train_x)
+            # transf = NormTransformer(cols)
+            # transf.fit_transform(train_x)
 
-        train_x = train_x.drop(drops, axis=1)
-        test_x = test_x.drop(drops, axis=1)
-        cols = train_x.columns
+            train_x = train_x.drop(drops, axis=1)
+            test_x = test_x.drop(drops, axis=1)
+            cols = train_x.columns
+
+            scaler = StandardScaler(copy=True)  # always copy input data (don't modify in-place)
+            # train_x = scaler.fit(train_x).transform(train_x)
+
+            X = np.vstack((train_x, test_x))
+            scaler.fit(X)
+
+            train_x = scaler.transform(train_x)
+            test_x = scaler.transform(test_x)
 
         # scaler = StandardScaler(copy=True)  # always copy input data (don't modify in-place)
         # # train_x = scaler.fit(train_x).transform(train_x)
@@ -470,18 +491,28 @@ def main():
         print 'Avg AUC: %f' % auc
 
     elif model == 'xgb': # xgboost
-        log_transf(train_x, log_ftrs)
-        log_transf(test_x, log_ftrs)
-
-        # inverse_transf(train_x, cols)
-        # inverse_transf(test_x, cols)
-
-        # transf = NormTransformer(cols)
-        # transf.fit_transform(train_x)
 
         train_x = train_x.drop(drops, axis=1)
         test_x = test_x.drop(drops, axis=1)
         cols = train_x.columns
+
+        norm = False
+        if norm:
+            log_transf(train_x, log_ftrs)
+            log_transf(test_x, log_ftrs)
+
+            # transf = NormTransformer(cols)
+            # transf.fit_transform(train_x)
+
+
+            scaler = StandardScaler(copy=True)  # always copy input data (don't modify in-place)
+            # train_x = scaler.fit(train_x).transform(train_x)
+
+            X = np.vstack((train_x, test_x))
+            scaler.fit(X)
+
+            train_x = scaler.transform(train_x)
+            test_x = scaler.transform(test_x)
 
         # scaler = StandardScaler(copy=True)  # always copy input data (don't modify in-place)
         #
@@ -518,24 +549,27 @@ def main():
         auc = cv_loop(train_x, y, xgb, n_folds = 5, verbose=False)
         print 'Avg AUC: %f' % auc
     elif model == 'gbt':
-        log_transf(train_x, log_ftrs)
-        log_transf(test_x, log_ftrs)
-
-        # transf = NormTransformer(cols)
-        # transf.fit_transform(train_x)
-
         train_x = train_x.drop(drops, axis=1)
         test_x = test_x.drop(drops, axis=1)
         cols = train_x.columns
 
-        scaler = StandardScaler(copy=True)  # always copy input data (don't modify in-place)
-        # train_x = scaler.fit(train_x).transform(train_x)
+        norm = False
+        if norm:
+            log_transf(train_x, log_ftrs)
+            log_transf(test_x, log_ftrs)
 
-        X = np.vstack((train_x, test_x))
-        scaler.fit(X)
+            # transf = NormTransformer(cols)
+            # transf.fit_transform(train_x)
 
-        train_x = scaler.transform(train_x)
-        test_x = scaler.transform(test_x)
+
+            scaler = StandardScaler(copy=True)  # always copy input data (don't modify in-place)
+            # train_x = scaler.fit(train_x).transform(train_x)
+
+            X = np.vstack((train_x, test_x))
+            scaler.fit(X)
+
+            train_x = scaler.transform(train_x)
+            test_x = scaler.transform(test_x)
 
         paras = json.load(open(options.paras, 'r'))
 

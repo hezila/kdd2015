@@ -29,21 +29,147 @@ class EnrollmentFeatureBag(FeatureBag):
             duration = 1.0
         self.feature_keys.append('duration')
         self.feature_values.append(duration + 0.0)
+
+        if duration == 1:
+            self.feature_keys.append('one_duration')
+            self.feature_values.append(1.0)
+        else:
+            self.feature_keys.append('one_duration')
+            self.feature_values.append(0.0)
+
+        if duration >= 20:
+            self.feature_keys.append('20_duration')
+            self.feature_values.append(1.0)
+        else:
+            self.feature_keys.append('20_duration')
+            self.feature_values.append(0.0)
         return self
 
-    def extract_request_count(self, skip_events=[]):
+    def extract_request_count(self):
         self.feature_keys.append("request_count")
-        if len(skip_events) == 0:
-            self.feature_values.append(len(self.logs))
+        x = len(self.logs) + 0.0
+        self.feature_values.append(x)
+
+        if x <= 250:
+            self.feature_keys.append('250_request_count')
+            self.feature_values.append(1.0)
+
+            self.feature_keys.append('850_request_count')
+            self.feature_values.append(0.0)
+
+            self.feature_keys.append('1000_request_count')
+            self.feature_values.append(0.0)
+        elif x > 250 and x <= 850:
+            self.feature_keys.append('250_request_count')
+            self.feature_values.append(0.0)
+
+            self.feature_keys.append('850_request_count')
+            self.feature_values.append(1.0)
+
+            self.feature_keys.append('1000_request_count')
+            self.feature_values.append(0.0)
+
         else:
-            x = sum(1 for log in self.logs if log['event'] not in skip_events)
-            self.feature_values.append(x + 0.0)
+            self.feature_keys.append('250_request_count')
+            self.feature_values.append(0.0)
+
+            self.feature_keys.append('850_request_count')
+            self.feature_values.append(0.0)
+
+            self.feature_keys.append('1000_request_count')
+            self.feature_values.append(1.0)
+
+
         return self
 
     def extract_active_days(self):
         request_dates = set([log['time'].strftime('%Y%m%d') for log in self.logs])
+        d = len(request_dates) + 0.0
+
         self.feature_keys.append('active_days')
-        self.feature_values.append(len(request_dates) + 0.0)
+        self.feature_values.append(d)
+
+        if d <=2:
+            self.feature_keys.append('1_2active_days')
+            self.feature_values.append(1.0)
+
+            self.feature_keys.append('3_5active_days')
+            self.feature_values.append(0.0)
+
+            self.feature_keys.append('6_9active_days')
+            self.feature_values.append(0.0)
+
+            self.feature_keys.append('10_20active_days')
+            self.feature_values.append(0.0)
+
+            self.feature_keys.append('more_20active_days')
+            self.feature_values.append(0.0)
+
+        elif d <=5 and d >= 3:
+            self.feature_keys.append('1_2active_days')
+            self.feature_values.append(0.0)
+
+            self.feature_keys.append('3_5active_days')
+            self.feature_values.append(1.0)
+
+            self.feature_keys.append('6_9active_days')
+            self.feature_values.append(0.0)
+
+            self.feature_keys.append('10_20active_days')
+            self.feature_values.append(0.0)
+
+            self.feature_keys.append('more_20active_days')
+            self.feature_values.append(0.0)
+
+        elif d <=9 and d >= 6:
+            self.feature_keys.append('1_2active_days')
+            self.feature_values.append(0.0)
+
+            self.feature_keys.append('3_5active_days')
+            self.feature_values.append(0.0)
+
+            self.feature_keys.append('6_9active_days')
+            self.feature_values.append(1.0)
+
+            self.feature_keys.append('10_20active_days')
+            self.feature_values.append(0.0)
+
+            self.feature_keys.append('more_20active_days')
+            self.feature_values.append(0.0)
+
+        elif d < 20 and d >= 10:
+            self.feature_keys.append('1_2active_days')
+            self.feature_values.append(0.0)
+
+            self.feature_keys.append('3_5active_days')
+            self.feature_values.append(0.0)
+
+            self.feature_keys.append('6_9active_days')
+            self.feature_values.append(0.0)
+
+            self.feature_keys.append('10_20active_days')
+            self.feature_values.append(1.0)
+
+            self.feature_keys.append('more_20active_days')
+            self.feature_values.append(0.0)
+
+        else:
+            self.feature_keys.append('1_2active_days')
+            self.feature_values.append(0.0)
+
+            self.feature_keys.append('3_5active_days')
+            self.feature_values.append(0.0)
+
+            self.feature_keys.append('6_9active_days')
+            self.feature_values.append(0.0)
+
+            self.feature_keys.append('10_20active_days')
+            self.feature_values.append(0.0)
+
+            self.feature_keys.append('more_20active_days')
+            self.feature_values.append(1.0)
+
+
         return self
 
     def extract_avg_active_days(self):
@@ -355,9 +481,24 @@ class EnrollmentFeatureBag(FeatureBag):
 
     def extract_request_weekend_count(self):
         ws = [log['time'].weekday() for log in self.logs]
+        d = len([1 for w in ws if w > 5]) + 0.0
         self.feature_keys.append('request_weekend_count')
-        self.feature_values.append(len([1 for w in ws if w > 5]) + 0.0)
+        self.feature_values.append(d)
+
+        if d > (len(ws) - d):
+            self.feature_keys.append('more_weekend')
+            self.feature_values.append(1.0)
+
+            self.feature_keys.append('more_weekday')
+            self.feature_values.append(0.0)
+        else:
+            self.feature_keys.append('more_weekend')
+            self.feature_values.append(0.0)
+
+            self.feature_keys.append('more_weekday')
+            self.feature_values.append(1.0)
         return self
+
 
     def extract_request_weekend_percentage(self):
         ws = [log['time'].weekday() for log in self.logs]
@@ -536,6 +677,28 @@ class EnrollmentFeatureBag(FeatureBag):
                 cnt = counter[event_type]
             self.feature_keys.append('event_browser_{0}_count'.format(event_type))
             self.feature_values.append(cnt)
+        cnt = 0
+        if 'event_browser_page_close_count' in counter:
+
+            cnt = counter['event_browser_page_close_count']
+
+        if cnt == 0:
+            self.feature_keys.append("0_page_close")
+            self.feature_values.append(1.0)
+        else:
+            self.feature_keys.append("0_page_close")
+            self.feature_values.append(0.0)
+        return self
+
+    def extract_event_count(self):
+        events = sorted([log['event'] for log in self.logs if log['event'] in ['access', 'problem']])
+        counter = Counter(events)
+        for event_type in ['access', 'problem']:
+            cnt = 0
+            if event_type in counter:
+                cnt = counter[event_type]
+            self.feature_keys.append('event_{0}_count'.format(event_type))
+            self.feature_values.append(cnt)
         return self
 
     def extract_event_percentage(self):
@@ -547,6 +710,40 @@ class EnrollmentFeatureBag(FeatureBag):
                 cnt = counter[event_type]
             self.feature_keys.append('event_{0}_percentage'.format(event_type))
             self.feature_values.append(float(cnt) / len(events))
+        return self
+
+    def extract_daytime(self):
+        request_dates = [int(log['time'].strftime('%H')) for log in self.logs]
+        counts = {}
+        day_times = 0.0
+        night_times = 0.0
+        for h in request_dates:
+            # if h not in counts:
+            #     counts[h] = 1.0
+            # else:
+            #     counts[h] += 1.0
+            if h < 19 and h >= 7:
+                day_times += 1.0
+            else:
+                night_times += 1
+
+
+        self.feature_keys.append('daytime_ratio')
+        self.feature_values.append(day_times / (day_times + night_times))
+
+        if night_times >= day_times:
+            self.feature_keys.append('day_time')
+            self.feature_values.append(0.0)
+
+            self.feature_keys.append('night_time')
+            self.feature_values.append(1.0)
+
+        else:
+            self.feature_keys.append('day_time')
+            self.feature_values.append(1.0)
+
+            self.feature_keys.append('night_time')
+            self.feature_values.append(0.0)
         return self
 
     def extract_video_over10minutes_count(self):
@@ -579,6 +776,44 @@ class EnrollmentFeatureBag(FeatureBag):
             if 600 <= time_delta.seconds <= 18000 and time_delta.days == 0:
                 cnt += 1.0
         self.feature_keys.append('video_over10minutes_count_lst3week')
+        self.feature_values.append(cnt)
+        return self
+
+    def extract_video_over10minutes_count_lst2week(self):
+        last_day = self.logs[-1]['time'].strftime('%Y%m%d')
+        last_day = datetime.datetime.strptime(last_day, '%Y%m%d')
+        start_date = last_day - datetime.timedelta(days=14)
+        cnt = 0
+        for i in xrange(len(self.logs) - 1):
+            if self.logs[i]['event'] != 'video':
+                continue
+            if self.logs[i]['time'] < start_date:
+                continue
+
+            time_delta = self.logs[i+1]['time'] - self.logs[i]['time']
+
+            if 600 <= time_delta.seconds <= 18000 and time_delta.days == 0:
+                cnt += 1.0
+        self.feature_keys.append('video_over10minutes_count_lst2week')
+        self.feature_values.append(cnt)
+        return self
+
+    def extract_video_over10minutes_count_lst1week(self):
+        last_day = self.logs[-1]['time'].strftime('%Y%m%d')
+        last_day = datetime.datetime.strptime(last_day, '%Y%m%d')
+        start_date = last_day - datetime.timedelta(days=7)
+        cnt = 0
+        for i in xrange(len(self.logs) - 1):
+            if self.logs[i]['event'] != 'video':
+                continue
+            if self.logs[i]['time'] < start_date:
+                continue
+
+            time_delta = self.logs[i+1]['time'] - self.logs[i]['time']
+
+            if 600 <= time_delta.seconds <= 18000 and time_delta.days == 0:
+                cnt += 1.0
+        self.feature_keys.append('video_over10minutes_count_lst1week')
         self.feature_values.append(cnt)
         return self
 
@@ -619,6 +854,52 @@ class EnrollmentFeatureBag(FeatureBag):
         self.feature_values.append(cnt)
         return self
 
+    def extract_problem_over3minutes_count_lst2week(self):
+        last_day = self.logs[-1]['time'].strftime('%Y%m%d')
+        last_day = datetime.datetime.strptime(last_day, '%Y%m%d')
+        start_date = last_day - datetime.timedelta(days=14)
+
+        cnt = 0
+        for i in xrange(len(self.logs) - 1):
+            if self.logs[i]['event'] != 'problem':
+                continue
+
+            if self.logs[i]['time'] < start_date:
+                continue
+
+
+            time_delta = self.logs[i+1]['time'] - self.logs[i]['time']
+
+            if 180 <= time_delta.seconds <= 18000 and time_delta.days == 0:
+                cnt += 1.0
+        self.feature_keys.append('problem_over3minutes_count_lst2week')
+        self.feature_values.append(cnt)
+        return self
+
+
+    def extract_problem_over3minutes_count_lst1week(self):
+        last_day = self.logs[-1]['time'].strftime('%Y%m%d')
+        last_day = datetime.datetime.strptime(last_day, '%Y%m%d')
+        start_date = last_day - datetime.timedelta(days=7)
+
+        cnt = 0
+        for i in xrange(len(self.logs) - 1):
+            if self.logs[i]['event'] != 'problem':
+                continue
+
+            if self.logs[i]['time'] < start_date:
+                continue
+
+
+            time_delta = self.logs[i+1]['time'] - self.logs[i]['time']
+
+            if 180 <= time_delta.seconds <= 18000 and time_delta.days == 0:
+                cnt += 1.0
+        self.feature_keys.append('problem_over3minutes_count_lst1week')
+        self.feature_values.append(cnt)
+        return self
+
+
     # the last 3 weeks features
     def extract_request_count_lst3weeks(self):
         request_dates = sorted([log['time'] for log in self.logs])
@@ -645,6 +926,20 @@ class EnrollmentFeatureBag(FeatureBag):
         self.feature_values.append(cnt)
 
         return self
+
+    def extract_request_count_lst1weeks(self):
+        request_dates = sorted([log['time'] for log in self.logs])
+        start_date = request_dates[-1] - datetime.timedelta(days=7)
+        cnt = 0
+        for d in request_dates:
+            if d >= start_date:
+                cnt += 1.0
+
+        self.feature_keys.append('request_count_lst1weeks')
+        self.feature_values.append(cnt)
+
+        return self
+
 
 
     def extract_server_event_count_lst3weeks(self):
@@ -690,6 +985,29 @@ class EnrollmentFeatureBag(FeatureBag):
             self.feature_values.append(cnt)
         return self
 
+    def extract_server_event_count_lst1weeks(self):
+        request_dates = sorted([log['time'] for log in self.logs])
+        start_date = request_dates[-1] - datetime.timedelta(days=7)
+        event_counts = {}
+        for log in self.logs:
+            if log['source'] != 'server':
+                continue
+
+            if log['time'] >= start_date:
+                event_type = log['event']
+                if event_type not in event_counts:
+                    event_counts[event_type] = 1.0
+                else:
+                    event_counts[event_type] += 1.0
+        for event_type in server_events:
+            cnt = 0
+            if event_type in event_counts:
+                cnt = event_counts[event_type]
+            self.feature_keys.append('{0}_event_server_count_lst1weeks'.format(event_type))
+            self.feature_values.append(cnt)
+        return self
+
+
     def extract_browser_event_count_lst3weeks(self):
         request_dates = sorted([log['time'] for log in self.logs])
 
@@ -734,6 +1052,27 @@ class EnrollmentFeatureBag(FeatureBag):
             self.feature_values.append(cnt)
         return self
 
+    def extract_browser_event_count_lst1weeks(self):
+        request_dates = sorted([log['time'] for log in self.logs])
+        start_date = request_dates[-1] - datetime.timedelta(days=7)
+        event_counts = {}
+        for log in self.logs:
+            if log['source'] != 'browser':
+                continue
+            if log['time'] >= start_date:
+                event_type = log['event']
+                if event_type not in event_counts:
+                    event_counts[event_type] = 1.0
+                else:
+                    event_counts[event_type] += 1.0
+        for event_type in browser_events:
+            cnt = 0
+            if event_type in event_counts:
+                cnt = event_counts[event_type]
+            self.feature_keys.append('{0}_event_browser_count_lst1weeks'.format(event_type))
+            self.feature_values.append(cnt)
+        return self
+
 
     def extract_activedays_lst3weeks(self):
         request_dates = sorted([log['time'] for log in self.logs])
@@ -748,6 +1087,14 @@ class EnrollmentFeatureBag(FeatureBag):
         start_date = request_dates[-1] - datetime.timedelta(days=14)
         days = set([log['time'].strftime('%Y%m%d') for log in self.logs if log['time'] >= start_date])
         self.feature_keys.append('activedays_lst2weeks')
+        self.feature_values.append(len(days))
+        return self
+
+    def extract_activedays_lst1weeks(self):
+        request_dates = sorted([log['time'] for log in self.logs])
+        start_date = request_dates[-1] - datetime.timedelta(days=7)
+        days = set([log['time'].strftime('%Y%m%d') for log in self.logs if log['time'] >= start_date])
+        self.feature_keys.append('activedays_lst1weeks')
         self.feature_values.append(len(days))
         return self
 
@@ -769,6 +1116,7 @@ class EnrollmentFeatureBag(FeatureBag):
         self.feature_values.append(len(days) / 21.0)
 
         return self
+
 
 
     def extract_month_fst_access(self):

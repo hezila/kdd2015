@@ -4,7 +4,11 @@
 import os, sys
 
 from feature.enrollment_feature_extractor import EnrollmentFeatureExtractor
+from feature.simple_feature_extractor import SimpleFeatureExtractor
+
 from feature.course_feature_extractor import CourseFeatureExtractor
+from feature.week_feature_extractor import WeekFeatureExtractor
+from feature.week_module_feature_extractor import WeekModuleFeatureExtractor
 # from feature.module_feature_extractor import ModuleFeatureExtractor
 from optparse import OptionParser
 
@@ -44,8 +48,15 @@ def main():
     extractor = None
     if target == 'enrollment':
         extractor = EnrollmentFeatureExtractor(mode, data_type, log_path, feature_path, debug_limit)
+    elif target == 'simple':
+        extractor = SimpleFeatureExtractor(mode, data_type, log_path, feature_path, debug_limit)
     elif target == 'course':
         extractor = CourseFeatureExtractor(mode, data_type, log_path, enrollment_path, label_path, object_path, feature_path, debug_limit)
+    elif target == 'week':
+        extractor = WeekFeatureExtractor(mode, data_type, log_path, feature_path, label_path, debug_limit)
+    elif target == 'weekmodule':
+        extractor = WeekModuleFeatureExtractor(mode, data_type, log_path, object_path, feature_path, debug_limit)
+
     # elif target == 'module':
     #     extractor = ModuleFeatureExtractor(mode, data_type, log_path, object_path, feature_path, debug_limit)
     else:

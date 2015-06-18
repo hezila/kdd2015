@@ -32,14 +32,14 @@ def merge_features(files, label_file=None):
         labels = pd.read_csv(label_file)
         data_set = pd.merge(data_set, labels, on="enrollment_id")
 
-    data_set = data_set.drop([
-                        'fst_day', 'lst_day',
-                        'fst_access_month_3',
-                        'fst_access_month_4',
-                        'fst_access_month_9',
-                        'lst_access_month_3',
-                        'lst_access_month_4',
-                        'lst_access_month_9'], axis=1)
+    # data_set = data_set.drop([
+    #                     'fst_day', 'lst_day',
+    #                     'fst_access_month_3',
+    #                     'fst_access_month_4',
+    #                     'fst_access_month_9',
+    #                     'lst_access_month_3',
+    #                     'lst_access_month_4',
+    #                     'lst_access_month_9'], axis=1)
     return data_set
 
 def load_dataset(feature_file, label_file=None, verbose=False):
@@ -121,6 +121,14 @@ def inverse_transf(sf, features):
 def inverse_transf_replace(sf, features):
     for col in features:
         sf[col] = sf[col].apply(lambda x: 1.0 / (1.0 + x))
+
+def sqrtexp_transf(sf, features):
+    for col in features:
+        sf['sqrt_exp_' + col] = sf[col].apply(lambda x: 1.0 / (1.0 + math.exp(-math.sqrt(x))))
+
+def sqrtexp_transf_replace(sf, features):
+    for col in features:
+        sf[col] = sf[col].apply(lambda x: 1.0 / (1.0 + math.exp(-math.sqrt(x))))
 
 
 def encode_labels(labels):

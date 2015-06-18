@@ -13,18 +13,18 @@ class XGBClassifier(BaseClassifier):
 
     """
 
-    def __init__(self, max_depth=8,
-                    learning_rate=0.01,
-                    n_estimators=500,
+    def __init__(self, max_depth=6,
+                    learning_rate=0.05,
+                    n_estimators=100,
                     silent=True,
                     objective="binary:logistic",
                     nthread= 8,
                     gamma=0.3,
-                    min_child_weight=1,
+                    min_child_weight=3,
                     max_delta_step=0,
-                    subsample=0.6,
-                    colsample_bytree=0.6,
-                    base_score=0.7,
+                    subsample=0.8,
+                    colsample_bytree=0.8,
+                    base_score=0.5,
                     seed=0,
                     missing=None,
                     class_weight = 'auto'
@@ -41,6 +41,7 @@ class XGBClassifier(BaseClassifier):
         self.subsample = subsample
         self.colsample_bytree = colsample_bytree
         self.class_weight = class_weight
+        self.silent = silent
 
     def fpreproc(self, dtrain, param):
         label = dtrain.get_label()
@@ -72,7 +73,7 @@ class XGBClassifier(BaseClassifier):
         clf = xgb.XGBClassifier(max_depth=self.max_depth,
                                 learning_rate=self.learning_rate,
                                 n_estimators=self.n_estimators,
-                                silent=True,
+                                silent=self.silent,
                                 objective="binary:logistic",
                                 nthread=self.nthread,
                                 gamma=self.gamma,
@@ -86,7 +87,7 @@ class XGBClassifier(BaseClassifier):
         if self.class_weight and self.class_weight == 'auto':
             weights = np.ones(len(y))
             ratio = float(np.sum(y == 1)) / np.sum(y==0)
-            weights[y==0] = ratio
+            weights[y==0] = ratio * 0.5
 
         clf = clf.fit(X, y, weights)
 

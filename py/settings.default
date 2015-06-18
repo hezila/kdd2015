@@ -1,0 +1,7 @@
+# -*- coding: utf-8 -*-
+
+[mysql]
+host   = 127.0.0.1
+db     = kddcup2015
+user   = root
+passwd = 

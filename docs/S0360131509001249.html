@@ -1,0 +1,1188 @@
+
+
+
+
+
+
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+<meta name="robots" content="NOARCHIVE">
+<meta name="robots" content="noodp" />
+<meta name="robots" content="noydir" />
+
+<link rel="canonical" href="http://www.sciencedirect.com/science/article/pii/S0360131509001249">
+
+
+<link rel="shortcut icon" href="http://cdn.els-cdn.com/sd/favSD.ico" type="image/x-icon">
+<title>
+ Dropout prediction in e-learning courses through the combination of machine learning techniques
+ </title> 
+
+<link type="text/css" rel="StyleSheet" href="http://www.sciencedirect.com/gadgetservices/gadgets/v9/css/gadgets_ext,gadgets,toolbar,SDArticleGadgetOverRide,jquery-ui-1.8.4.custom.css">
+
+
+<link rel="stylesheet" href="http://cdn.els-cdn.com/sd/css/article_1506R3.css" type="text/css">
+<link rel="stylesheet" href="http://cdn.els-cdn.com/sd/css/articleSprite_1506R3.css" type="text/css">
+<link rel="stylesheet" href="http://cdn.els-cdn.com/sd/css/jquery-ui_1506R3.css" type="text/css">
+
+
+
+
+<!--[if lt IE 9]>
+<link rel="stylesheet" Title="Default Styles" href="http://cdn.els-cdn.com/sd/css/css_gen_ielt9_1506R3.css" type="text/css">
+<![endif]-->
+
+<script>
+var ab=new Object();
+ab.entitled = true;
+</script>
+<script>
+(function() {
+var scriptTag = document.createElement('script'); 
+scriptTag.type = 'text/javascript';
+scriptTag.async = true;
+scriptTag.src = '//cdn.optimizely.com/js/204774041.js';
+var head = document.getElementsByTagName('head')[0];
+head.parentNode.insertBefore(scriptTag, head);
+})();
+function optimizelyTimeout() {
+window.optimizely = window.optimizely|| []; 
+if(!window.optimizely.data) {
+ window.optimizely.push("timeout"); 
+} }
+setTimeout(optimizelyTimeout, 1000); 
+</script>
+
+<script>
+var prs = new Object();prs.rt=function(label,ts){this[label]=(ts||ts==0?ts:new Date().getTime());};
+</script>
+
+
+
+<!--[if lte IE 7]>
+<script src="http://cdn.els-cdn.com/sd/ut/js/json2_1506R3.js.min"></script>
+<![endif]-->
+</head>
+
+<body>
+
+<div class="ua_btn" role="region" aria-label="screen reader compatability"><a role="button" rel="nofollow" href="http://www.sciencedirect.com/science/article/pii/S0360131509001249?np=y">Screen reader users, click here to load entire article</a>This page uses JavaScript to progressively load the article content as a user scrolls.  Screen reader users, click the load entire article button to bypass dynamically loaded article content.</div>
+
+
+
+<script>
+var refLinkURL = "http://www.sciencedirect.com/science/relLink/ajaxReq?_eid=1-s2.0-S0360131509001249";
+var updatedCitedBy = "http://www.sciencedirect.com/science/referenceResolution/ajaxRefResol?_updateCitedBy=";
+var refResolvePath = "http://www.sciencedirect.com/science/referenceResolution/ajaxRefResol?_pii=S0360131509001249&_refCnt=55&_docType=article";
+
+// these variables handle the reference resolution. Please ignore the naming.
+// the first variable myMap will hold an associative array of links by bibID
+// the second variable myXabsCounts holds the scopus counts.
+var myMap = []; // html of links for references.
+var myXabsCounts = []; // scopus counts
+</script>
+<div id="header-area">
+  
+
+
+<!-- ************* For A/B testing FAST and SOLR Proxy ***************** -->
+
+<!-- *************End for A/B testing FAST and SOLR Proxy *****************-->
+
+
+
+<div id="ieWarningMsg">
+    <span class="infoIcon_ie spErrorIcon">
+        ScienceDirect is phasing out support for older versions of Internet Explorer on Jan 12, 2016.  For the best product experience, we recommend you upgrade to a  
+<a href="http://www.microsoft.com/download/internet-explorer.aspx"> newer version of IE</a> 
+or use a different browser:<a href="https://www.mozilla.org/firefox/new/"> Firefox </a> or <a href="https://www.google.com/chrome/browser/">Chrome</a>. 
+For additional information please see the <a href="http://blog.sciencedirect.com/"> ScienceDirect Blog </a> page.
+    </span>
+    <a class="closeBt" title="Close Internet Explorer 7 warning">Close</a>
+</div>
+
+
+
+<div id="header">
+<div class="headerBlk">
+    <div class="headerInner" role="navigation" aria-label="ScienceDirect">
+        <div class="home">
+            
+            <!--INSERTS THE TEMPLATE VARIABLES POPULATED FROM DB for SCIVERSE and PRODUCT labels-->
+            
+                <a href="http://www.sciencedirect.com/" title="ScienceDirect -The world's leading full-text scientific database"> <span class="logoScienceDirectImg">&nbsp;</span></a>
+            
+        </div>
+
+        
+            <ul class="publication">
+                <!-- Journals link -->
+                
+                    
+                        <li>
+                            <a  href="http://www.sciencedirect.com/science/journals">Journals</a>
+                        </li>
+                     
+                
+
+                <!-- Books link -->
+                
+                    
+                        <li class="sep">
+                            <a  href="http://www.sciencedirect.com/science/bookbshsrw">Books</a>
+                        </li>
+                     
+                
+            </ul>
+        
+
+    </div>
+    
+         <!-- if not logged in -->
+         
+            
+            <div id="login" class="clearfix" aria-label="Help and Sign In" role="navigation" style="margin-right:230px;">
+            <ul class="userlinks">
+                
+                
+                
+            
+                <!--top right widget-->
+                <li  id="loginPlus">
+                    <h2><a id="loginPlusScript" href="javascript:LoginBox.flipLogin('loginBox',null);" title="Sign in to ScienceDirect" class="novisit plus nojs S_C_SignIn" aria-haspopup="true" aria-expanded="false" aria-controls="loginBox" role="button" >Sign in</a></h2>
+                    <noscript><a href="http://www.sciencedirect.com/science?_ob=HomePageURL&_method=userHomePage&_fl=y&md5=6dada1fb726164470bad9e40bbc4d7fa" title="Open the Sign in Box" class="plus S_C_SignIn" id="loginPlusNoScript" >Sign in</a></noscript>
+					
+                    <div id="loginBox" role="dialog" aria-labelledby="headingSignIn" class="bannerAvail" style="width:600px;display:none;"> 
+                        
+                        <div style="width:285px;float:right;border-left:1px solid #9B9B9B;padding-left:10px;min-height:180px;">
+                            
+                                <div class="openAthens"><a href="https://auth.elsevier.com/ShibAuth/institutionLogin?entityID=https%3A%2F%2Fidp.eduserv.org.uk%2Fopenathens&appReturnURL=http%3A%2F%2Fwww.sciencedirect.com%2Fscience%2Farticle%2Fpii%2FS0360131509001249" title="Log in using OpenAthens">OpenAthens login</a></div>
+                            
+                            
+                            <div class="sampletext">
+                                <div style="font-weight:bold;padding-bottom:7px;"><h3><b>Login via your institution</b></h3></div>
+                                
+                                
+                                    <div class="fedLink"><a href="http://www.sciencedirect.com/science/externallogin" title="Other institution login">Other institution login</a></div>
+                                
+                            </div>
+                            
+                            
+                            
+                                
+                            
+                            
+                            
+                        </div>
+                        
+                        <div class="padding" style="width:285px;" >
+                            <form name="sdLogin" method="POST" action="https://www.sciencedirect.com/science/login" id="login-box-form" style="margin:0;">
+                            <b><h3 id="headingSignIn">Sign in using your ScienceDirect credentials</h3></b>
+                            <input type="hidden" name="login" value="login">
+                            <div style="margin-top:20px;">
+                            <label for="username"><span style="text-align:right;">Username:</span>
+                            <input id="username" type="text" name="userid" title="Please enter your username here" /></label>
+                            </div>
+                            
+                            <div style="margin-top:7px;">
+                            <label for="password"><span style="text-align:right;">Password:</span>
+                            <input id="password" type="password" name="password" maxlength="20" title="Please enter your password here" onkeypress="if(13==event.keyCode)this.form.submit();if (13==event.keyCode)return false;"/></label>
+                            </div>
+                                   
+                                       
+                            
+                            <div class="remember">
+                            <input type="checkbox" checked name="rememberid" id="rememberMe" value="Y" class="allCheck top2fix" title="Checking this option will log you in automatically next time you visit ScienceDirect"/>
+                            <label for="rememberMe" title="Checking this option will log you in automatically next time you visit ScienceDirect">Remember me</label>
+                            </div>
+                            
+                            <input type="hidden" name="_ob" value="MiamiLogonURL">
+                            <input type="hidden" name="targetURL" value="http://www.sciencedirect.com/science/article/pii/S0360131509001249" >
+                            <input type="hidden" name="returnURL" value="http://www.sciencedirect.com/science/article/pii/S0360131509001249" >
+                            <div class="submit" >
+                            
+                            <div style="float:left;padding-left:0px;"><input class="button" type="Submit" name="arrow" alt="Sign in to ScienceDirect" title="Sign in to ScienceDirect" value="Sign in"/></div>
+                        
+                            
+                            <div class="notRegistered"><span class="astPad">| </span><span><a href="https://www.sciencedirect.com/science/register-new-user" title="" target="_top">Not Registered?</a></span></div>
+                            
+                            
+                            <div style="clear:left;"></div>
+                            </div>
+                            
+                            <div class="forgotpass">
+                            <a href="http://www.sciencedirect.com/science?_ob=ReminderURL&_method=display&md5=4a97631c25ac81c09ad2f961106e9da2" target="passwd" onClick="var remindWin;remindWin=window.open('','passwd','scrollbars=yes,resizable=yes,directories=no,toolbar=n,menubar=no,status=no,width=650,height=300');" title="Click here for help in recovering your ScienceDirect access">Forgotten username or password?</a>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </li>
+                
+                <li class="last"><a class="S_C_helpLink" href="/science?_ob=HelpURL&_file=browse_open_doc.htm&_btn=Y&_zone=TopNavBar&_origin=article" target="sdhelp" title="Help (Opens new window)" onClick="var helpWin; helpWin=window.open('/science?_ob=HelpURL&_file=browse_open_doc.htm&_btn=Y&_zone=TopNavBar&_origin=article','sdhelp','scrollbars=yes,resizable=yes,directories=no,toolbar=no,menubar=no,status=no,width=984,height=738'); helpWin.focus(); return false" >Help</a></li>
+                
+            </ul>
+            </div>
+            
+            
+        <!-- logged in -->
+             
+    
+</div>
+
+
+    
+                        
+        <div class="clearfix" id="bannerTop" role="banner" aria-label="Institutional Access">                        
+            
+                <a href="http://library.hkbu.edu.hk/" onclick="openNS('http://library.hkbu.edu.hk/'); return false;">
+                    <img src="http://library.hkbu.edu.hk/pic/lib_logo_small.png" border="0" />
+                </a>
+            
+        </div>
+        
+    
+           
+
+
+</div><!--header-->
+
+
+
+
+
+
+
+
+
+</div><!--header-area-->
+<div id="page-area">
+    <div id="articleToolbar" class="clearfix quicksearch prd_sci_dir">
+        <div id="articleNav">
+  <ul aria-label="Article options" role="navigation" class="clearfix">
+    <!-- return to gateway -->
+     
+
+
+
+
+
+
+<li>
+  <div class="icon_pdf toolbar">
+    <div class="largeIcon"></div>
+    <a id="pdfLink" rel="nofollow"   href="http://www.sciencedirect.com/science/article/pii/S0360131509001249/pdfft?md5=b110556eb346637ac4e5789fc92a872c&pid=1-s2.0-S0360131509001249-main.pdf" queryStr="?_origin=article&_zone=toolbar" target="newPdfWin"   pdfurl="http://www.sciencedirect.com/science/article/pii/S0360131509001249/pdfft?md5=b110556eb346637ac4e5789fc92a872c&pid=1-s2.0-S0360131509001249-main.pdf" queryStr="?_origin=article&_zone=toolbar" suggestedArtURL="http://www.sciencedirect.com/science/suggestedArt/citeList/pii/S0360131509001249/eid/1-s2.0-S0360131509001249/serial" class="S_C_pdfLink big pdf ext_sdlink cLink" style="cursor:pointer" title="Download PDF" >Download PDF
+    <span id="pdfExplanation" class="offscreen">Opens in a new window.  Article suggestions will be shown in a dialog on return to ScienceDirect.</span>
+    </a>
+  </div>
+</li>
+ 
+ 
+
+
+
+
+
+
+
+<li class="exportPopupListitem">
+<div class="pulldown">
+    <div class="exportDivision" title="Export citations">
+    <div class="exportIconText">
+    <div class="icon_exportarticlesci_dir initialImage export_icon" tabindex="0"> &nbsp; </div>
+    <input id="icon_exportarticle" value="Export" name="export" class="listAction export export_general" tabindex="-1" type="button">
+     <span class="downSM_sci_dir exportArrow"></span>
+    </div>
+    <input class='zone' name='zone' type='hidden' value='exportDropDown'/>
+    </div>
+    <div class="menu export_popup hidden" id="export_popup">
+    <div  class='warningIcon' title="Warning Icon" alt="Warning Icon"></div>
+    <form name="exportCite" method=post action=/science?_ob=DownloadURL&_method=finish&_eidkey=1-s2.0-S0360131509001249&count=1&_docType=FLA&md5=e9b497924e10962bf54292c4865f7136 target="">
+    <input class='zone' name='zone' type='hidden' value='exportDropDown'/>
+            <script language="javascript" type="text/javascript">
+<!--
+
+function checkExportFormat(limit) {
+
+    var msg = "";
+
+    for (i=0;i<document.exportCite.elements.length;i++) {
+        if (document.exportCite.elements[i].value == "REFWX") {
+            if (document.exportCite.elements[i].checked) {
+                document.exportCite.setAttribute('target',"RefWorksMain");
+                if (checkLimit()) {
+                    if (limit) {
+                        msg = "It is possible that some users may experience problems when downloading large numbers of citations. If this happens please contact RefWorks support at your regionally hosted site or e-mail support@refworks.com to assist you further.\n\n";
+                    }
+                    msg += "Exporting to RefWorks may take some time, please wait....";
+                    alert(msg);
+                }
+            }
+            else {
+                document.exportCite.setAttribute('target',"");
+            }
+            break;
+        }
+    }
+    return true;
+}
+
+function determineCount(numStr) {
+    var count=1;
+
+    if(numStr.indexOf("-")) {
+        var rangeStr = numStr.split("-");
+
+        if(rangeStr.length == 2) {
+            var highNum = parseInt(rangeStr[1]);
+            var lowNum = parseInt(rangeStr[0]);
+
+            if(highNum >= lowNum) { count = (highNum - lowNum) + 1; }
+        }
+    }
+    return count;
+}
+
+function checkLimit(){
+
+    var selectNum = "";
+    var useSelected = false;
+    var allNum = 0;
+    var count = 0;
+    var rdoc = 0;
+
+    for (i=0;i<document.exportCite.elements.length;i++) {
+        if (document.exportCite.elements[i].name == "count") {
+            allNum = document.exportCite.elements[i].value;
+        }
+        if (document.exportCite.elements[i].name == "NUMBER_LIST") {
+            selectNum = document.exportCite.elements[i].value;
+        }
+        if (document.exportCite.elements[i].name == "_rdoc") {
+            rdoc = document.exportCite.elements[i].value;
+        }
+        if (document.exportCite.elements[i].value == "selected") {
+            if (document.exportCite.elements[i].checked) {
+                useSelected = true;
+            }
+        }
+    }
+
+    if (useSelected) {
+        selectNum = selectNum.replace(/ /g,"");
+        if(selectNum.indexOf(",")) {
+            var commaList = selectNum.split(",");
+            for(i=0; i < commaList.length; i++) {
+                count += determineCount(commaList[i]);
+            }
+        }
+        else {
+            count += determineCount(selectNum);
+        }
+    }
+    else { 
+        if (rdoc > 0) {
+            count = 1;
+        }
+        else {
+            count = allNum;
+        }
+    }
+
+    if(count > 50) { return true; }
+  
+    return false;
+}
+
+//-->
+</script>
+
+    <div class="exportInfo">
+        <div class="chkboxCount"></div>
+        <div class="exportHelp">
+            <a target="sdhelp" href="/science?_ob=HelpURL&_file=art_export.htm&_btn=Y&_zone=TopNavBar&_origin=article" title="Help (Opens new window)" onClick="var helpWin; helpWin=window.open('/science?_ob=HelpURL&_file=art_export.htm&_btn=Y&_zone=TopNavBar&_origin=article','sdhelp','scrollbars=yes,resizable=yes,directories=no,toolbar=no,menubar=no,status=no,width=984,height=738'); helpWin.focus(); return false">Help</a>
+        </div>
+    </div>
+
+    <div class="expContainer">
+      <ul class="Export_Popup" width="100%">
+        <li class="subHeading"><h3> Direct export </h3></li>
+        <li class="direct_export">
+         
+            <div>
+              <div class="btn_export directExport">
+                <div class="icon_Mendeley" title="Save to Mendeley">&nbsp;</div>
+                <input id="directExport" type="button" value="Save to Mendeley" name="Save to Mendeley" alt="Save to Mendeley" class="mendeleyBT button"/>
+              </div>
+            </div>
+        
+        
+            <div class="btnLine">
+              <div class="btn_export refworks">
+                <div class="icon_Refworks" title="Save to RefWorks">&nbsp;</div>
+                <input id="REFWX" type="button" value="Save to RefWorks" name="Save to RefWorks" alt="Save to RefWorks" class="button refworks"/>
+              </div> 
+            </div>
+            <div class="clear"> </div>
+        
+        </li>
+        <li class="subHeading big"> <h3>Export file</h3></li>
+        <li class="export_radio RIS"><input type="radio" id="RIS" checked name="citation-type" value="RIS"  class="artRadio expRadio RIS">&nbsp;<label for="RIS">RIS&nbsp;(for EndNote, Reference Manager, ProCite)</label>
+        </li>
+        <li class="export_radio"><input type="radio" id="BIBTEX" name="citation-type" value="BIBTEX"  class="artRadio expRadio BIBTEX">&nbsp;<label for="BIBTEX">BibTeX</label>
+        </li>
+        <li class="export_radio"><input type="radio" id="ASCII" name="citation-type" value="ASCII"  class="artRadio expRadio ASCII">&nbsp;<label for="ASCII">Text</label>
+        </li>
+        <li class="export_radio hidden"><input type="radio" id="REFWX" name="citation-type" value="REFWX"  class="artRadio expRadio REFWX">&nbsp;<label for="REFWX">RefWorks Direct Export</label>
+        </li>
+        <li class="subHeading big"><h3>Content</h3></li>
+        <li class="expCitab export_radio"><input type="radio" id="cite" class="cite artRadio expRadio" name="format" value="cite" >&nbsp;<label class="cit" for="cite"> Citation Only </label>
+        </li>
+        <li class="expCitab export_radio citab"><input type="radio" id="cite-abs" class="cite-abs artRadio expRadio" name="format" value="cite-abs" checked>&nbsp;<label class="cab" for="cite-abs"> Citation and Abstract </label>
+        </li>
+        <li class="export_submit">
+            <div class="downBtn export_downBtn">
+               <input type="submit" value="Export" name="export" alt="Export" class="button export_button" id="export_button"/>
+            </div> 
+        </li>
+      </ul>
+
+    </div>
+
+
+        
+        
+            
+         
+
+    </form>
+    </div> 
+</div>    
+</li>
+  
+
+
+
+</ul>
+</div>
+
+<div class="sdSearch" aria-label="Quick search" role="search">
+    <fieldset>
+        <div class="left">
+            <form id="quickSearch" name="qkSrch" method="get" target="_top" action="/science">
+            <input type="hidden" name="_ob" value="QuickSearchURL">
+            <input type="hidden" name="_method" value="submitForm">
+            <input type="hidden" name="_acct" value="C000058587">
+            <input type="hidden" name="searchtype" value="a">
+            <input type="hidden" name="_origin" value="article">
+            <input type="hidden" name="_zone" value="qSearch">
+            <input type="hidden" name="md5" value="dd6366c046db00acd3e08034391ec3a8">
+            
+            <input  id="quickSearch" type="text" name="qs_all" placeholder="Search ScienceDirect" value="" size="30" maxlength="450" title="Perform a quick search on ScienceDirect"><input type="submit" class="submit" value="" title="Submit quick search"/>
+            
+            <a class="advanced S_C_advanced" href="http://www.sciencedirect.com/science/search" >Advanced search</a>
+            </form>
+        </div>
+    </fieldset>
+</div>
+<div class="clear"></div>
+<div id="erToolbar"></div>
+
+
+<div style="color : #FF0000; font-weight : bold;border:0px solid red;">
+  
+  
+  
+  
+</div>
+
+
+
+
+
+    </div>
+    <div id="articleToolbarDummy"></div>
+  <div style="clear:both;"></div>
+  
+  <div id="leftPane" class="column" aria-label="table of contents" role="navigation">
+    <div id="leftPaneInner">
+        <div>
+        <div id="leftButton">
+            <ul>
+                <li class="tocbutton">
+                    <a class="outline-toggle" title="Open to view article outline"  alt="Open to view article outline" href="#" aria-expanded="false">
+                        <span class="icon outline_big"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div id="outlineContainer">
+            <a class="closeBt" title="Close">&nbsp;</a>
+            <div id="outline" class="outline">
+              <script type="text/javascript">
+              document.write("<div class='outlineMsg'>Article outline is loading...</div>");
+              </script>
+              <noscript>
+              <div class="infoMsg">
+              <div style="float: left; width: 20px; "><img border="0" src="http://cdn.els-cdn.com/sd/alertIcon.gif" valign="top" alt="Alert message"></div>
+              <div style="padding-left:25px;">JavaScript is disabled on your browser. <br><div style="padding-top:10px;">
+              Please enable JavaScript to use all the features on this page.</div></div>
+              </div>
+              </noscript>
+            </div>
+        </div>
+        </div>
+    </div>
+  </div>
+  <div id="centerPane" class="column">
+    <div class="topBorder"></div>
+    <div id="centerContent" class="centerContent">
+    <div id="centerInner" class="centerInner svBigBox" aria-label="Article" role="main">
+        
+      
+      <noscript>
+      <div class="msgBox" style="margin-top:10px;">
+          <span class="errMsg">
+            <div>JavaScript is disabled on your browser.  Please enable JavaScript to use all the features on this page. This page uses JavaScript to progressively load the article content as a user scrolls. Click the View full text link to bypass dynamically loaded article content. <a rel="nofollow" href="http://www.sciencedirect.com/science/article/pii/S0360131509001249?np=y">View full text</a></div>
+         </span>
+      </div><br/>
+      </noscript>
+      <div class="head headTemplate page_fragment_ind">
+
+  
+<div class="publisherLogo">
+  <span class="spElsevierPubIcon"></span>
+</div>
+
+
+  
+    <?xml version="1.0" encoding="UTF-8"?><div xmlns:bk="http://www.elsevier.com/xml/bk/dtd" class="publicationHead"><div class="title"><a title="Go to Computers &amp; Education on ScienceDirect" href="/science/journal/03601315" queryStr="?zone=centerPane" class="cLink"><span>Computers &amp; Education</span></a></div><p class="volIssue"><a class="S_C_volIss" title="Go to table of contents for this volume/issue" href="/science/journal/03601315/53/3">Volume 53, Issue 3</a>, November 2009, Pages 950–965</p></div>
+  
+    <div class="publicationCover cover2">
+    
+      
+    <a queryStr="?zone=publicationLogo" class="cLink" href="/science/journal/03601315/53/3">
+      
+    
+    <img alt="Cover image" src="http://ars.els-cdn.com/content/image/1-s2.0-S0360131509X00060-cov150h.gif" class="toprightlogo" />
+    <noscript><img alt="Cover image" src="http://ars.els-cdn.com/content/image/1-s2.0-S0360131509X00060-cov150h.gif" class="toprightlogo" /></noscript>
+    </a>
+    
+  </div>
+
+
+</div>
+
+      <div id="frag_1" class="page_fragment auth_frag" data-first="true" data-fid="1"><div class="module_topic_paths"></div><h1 class="svTitle" id="">Dropout prediction in e-learning courses through the combination of machine learning techniques</h1><ul class="authorGroup noCollab svAuthor"><li><a href="#" class="authorName svAuthor" data-orcid="" id="authname_N406d6c40N4069a658" data-t="a" data-fn="Ioanna" data-ln="Lykourentzou" data-pos="1" data-tb="">Ioanna Lykourentzou</a><a title="Corresponding author contact information" href="#cor1" id="bcor1" class="intra_ref auth_corr"></a><sup>, </sup><a href="mailto:ioanna@medialab.ntua.gr" class="auth_mail" title="E-mail the corresponding author"></a>, </li><li><a href="#" class="authorName svAuthor" data-orcid="" id="authname_N406d6c40N4069a6e8" data-t="a" data-fn="Ioannis" data-ln="Giannoukos" data-pos="2" data-tb="">Ioannis Giannoukos</a> <a href="mailto:igiann@medialab.ntua.gr" class="auth_mail" title="E-mail the corresponding author"></a>, </li><li><a href="#" class="authorName svAuthor" data-orcid="" id="authname_N406d6c40N4069a778" data-t="a" data-fn="Vassilis" data-ln="Nikolopoulos" data-pos="3" data-tb="">Vassilis Nikolopoulos</a> <a href="mailto:vnikolop@medialab.ntua.gr" class="auth_mail" title="E-mail the corresponding author"></a>, </li><li><a href="#" class="authorName svAuthor" data-orcid="" id="authname_N406d6c40N4069a808" data-t="a" data-fn="George" data-ln="Mpardis" data-pos="4" data-tb="">George Mpardis</a> <a href="mailto:gmpardis@medialab.ntua.gr" class="auth_mail" title="E-mail the corresponding author"></a>, </li><li><a href="#" class="authorName svAuthor" data-orcid="" id="authname_N406d6c40N4069a898" data-t="a" data-fn="Vassili" data-ln="Loumos" data-pos="5" data-tb="">Vassili Loumos</a> <a href="mailto:loumos@cs.ntua.gr" class="auth_mail" title="E-mail the corresponding author"></a></li></ul><!--VALIDHTML--><ul class="affiliation authAffil"><li> <span id="">School of Electrical and Computer Engineering, National Technical University of Athens, Zographou Campus, 15773 Athens, Greece</span></li></ul><!--VALIDHTML--><!--VALIDHTML--><dl class="articleDates"><dd>Received 25 February 2009, Revised 5 May 2009, Accepted 6 May 2009, Available online 31 May 2009</dd></dl><!--VALIDHTML--><div class="moreInformation"></div><div id="showMoreButtons"></div><div id="ppvPlaceHolder" class="hidden"></div><!--VALIDHTML--><dl class="extLinks"><dd class="doiLink"></dd><dd class="rightsLink"></dd></dl><div class="articleOAlabelForced"></div><div id="refersToAndreferredToBy"><dl id="referredToBy" class="documentThread"><!--Referred To By--></dl></div><!--FRAGMENTEND--><div class="page_fragment_ind auth_frag" data-id="frag_2"></div></div><div id="frag_2" class="page_fragment" data-fid="2"><script>prs.rt("abs_1st_beg");</script><!--VALIDHTML--><hr id="abs_author1" class="artHeader"><div class="abstract svAbstract " data-etype="ab"><h2 class="secHeading" id="author1">Abstract</h2><p id="">In this paper, a dropout prediction method for e-learning courses, based on three popular machine learning techniques and detailed student data, is proposed. The machine learning techniques used are feed-forward neural networks, support vector machines and probabilistic ensemble simplified fuzzy ARTMAP. Since a single technique may fail to accurately classify some e-learning students, whereas another may succeed, three decision schemes, which combine in different ways the results of the three machine learning techniques, were also tested. The method was examined in terms of overall accuracy, sensitivity and precision and its results were found to be significantly better than those reported in relevant literature.</p></div><!--VALIDHTML--><script>prs.rt("abs_end");</script><div id="SD_BA1P" class="sgfNoTitleBar sgfNoGadgetBorder svDoNotLink"></div><!--VALIDHTML--><h2 id="kwd_1" class="svKeywords">Keywords</h2><ul class="keyword" id=""><li id="" class="svKeywords"><span id="">Distance education and telelearning</span>; </li><li id="" class="svKeywords"><span id="">E-learning</span>; </li><li id="" class="svKeywords"><span id="">Machine learning</span>; </li><li id="" class="svKeywords"><span id="">Dropout prediction</span></li></ul><!--VALIDHTML--><hr class="artHeader"><h2 class="svArticle" id="section_lbl1">1. Introduction</h2><p class="svArticle section" id="">During the last few years, e-learning has presented significant growth and is attracting an increasing number of participants. Contemporary web-based courses take advantage of internet capabilities to support and improve the effective approaches of traditional education, while at the same time they offer great innovative possibilities. In addition to assisting individual learners to acquire knowledge in a flexible manner, without the barrier of their physical presence in a classroom, this new form of education also benefits institutions that now have the opportunity to provide more students with their educational services, reducing at the same time their expenditure (<a href="#bib14" id="bbib14" class="intra_ref">Cohen and Nachmias, 2006</a>, <a href="#bib37" id="bbib37" class="intra_ref">Mendling et al., 2005</a>&#xA0;and&#xA0;<a href="#bib46" id="bbib46" class="intra_ref">Simpson, 2004</a>). The nature of e-learning courses has also attracted a significant number of adult learners who seek to combine higher education and technical level training with demanding work responsibilities (<span id="bbib26"><a href="#bib26" id="ancbbib26" class="intra_ref">Holder, 2007</a></span>).</p><!--VALIDHTML--><p class="svArticle section" id="">Despite the fact that they appeal to a great number of students, web-based courses demonstrate higher dropout rates than traditional education courses, often surpassing the latter by a 10&ndash;20% rate as reported by <span id="bbib9"><a href="#bib9" id="ancbbib9" class="intra_ref">Carr (2000)</a></span> and <span id="bbib17"><a href="#bib17" id="ancbbib17" class="intra_ref">Diaz (2002)</a></span>. Additional studies confirm the above reports and estimate e-learning dropout rates to be 25&ndash;40% compared to the 10&ndash;20% rates of on-campus courses (<a href="#bib10" id="bbib10" class="intra_ref">Carter, 1996</a>, <a href="#bib18" id="bbib18" class="intra_ref">Doherty, 2006</a>, <a href="#bib20" id="bbib20" class="intra_ref">Frankola, 2001</a>, <a href="#bib42" id="bbib42" class="intra_ref">Parker, 2003</a>&#xA0;and&#xA0;<a href="#bib53" id="bbib53" class="intra_ref">Xenos, 2004</a>).</p><!--VALIDHTML--><p class="svArticle section" id="">Nevertheless, student retention rates are among the indicators that universities, policymakers, higher education funding bodies and educators consider as an objective, outcome-based measure of the quality that an educational institution offers. This quality indicator has been recognized and used at international levels including Australia, the European Union, the United States of America and South Africa (<span id="bbib4"><a href="#bib4" id="ancbbib4" class="intra_ref">Blom &amp; Meyers, 2003</a></span>). For instance, it has been reported that the US Department of Education is placing increasing significance on higher education retention issues as part of its quality assessment and funding of higher education institutions (<span id="bbib6"><a href="#bib6" id="ancbbib6" class="intra_ref">Borrego, 2002</a></span>). Moreover, <span id="bbib18"><a href="#bib18" id="ancbbib18" class="intra_ref">Doherty (2006)</a></span> reports that the United States Commission on the Future of Higher Education verified that college and university retention rates were analyzed as part of a review on federal funding. Retention performance indicators are also taken into consideration by the Higher Education Funding Council of the United Kingdom as a means to provide reliable information on the performance of the UK higher educational sector, to allow comparison among individual institutions, to facilitate them to benchmark their own performance and to contribute to the public accountability of higher education (<span id="bbib23"><a href="#bib23" id="ancbbib23" class="intra_ref">HEFCE, 2007</a></span>). Student retention rates are also reported to be among the criteria for the evaluation of distance education according to the Council for Regional Accrediting Commissions (<span id="bbib47"><a href="#bib47" id="ancbbib47" class="intra_ref">Terkla, 2001</a></span>) and the Higher Learning Commission (<span id="bbib25"><a href="#bib25" id="ancbbib25" class="intra_ref">HLC, 2007</a></span>).</p><!--VALIDHTML--><p class="svArticle section" id="">This increased emphasis on retention, combined with the high dropout rates that e-learning courses present, makes the reduction of dropout rates fundamental to the acceptance and success of this type of course. One of the key elements in reducing e-learning dropout rates is the accurate and prompt identification of at-risk students. As soon as these students have been identified, instructors will be able to better address their specific needs and take the appropriate actions to reduce their probability to drop the course. The identification of students prone to dropout is also expected to aid the specialized intervention programs that educational institutions incorporate in their strategic plans in order to increase retention.</p><!--VALIDHTML--><p class="svArticle section" id="">This paper presents a dropout prediction method to accurately identify dropout-prone students in early stages of the e-learning course. The proposed method takes advantage of the fully electronic characteristics of e-learning courses, which include detailed student activity and progress data, to make its predictions dynamically and adapt them according to the performance and participation levels of each student throughout the course. These data are used to train three machine learning techniques, namely feed-forward neural networks (FFNNs), support vector machines (SVMs) and probabilistic ensemble simplified fuzzy ARTMAP (PESFAM). Then, since a single machine learning technique may fail to predict a number of dropout students, the results of these techniques are combined using three decision schemes. The estimations produced by each machine learning technique as well as those produced by each decision scheme were compared in terms of overall accuracy, sensitivity and precision. Experimental results indicate that combining the outputs of the three techniques leads to a more accurate and prompt identification of dropout students, surpassing all relevant results reported in current literature.</p><!--VALIDHTML--><p class="svArticle section" id="">The rest of this paper is structured as follows: section 2, referring to the materials and methods of this study, firstly presents the findings of related research literature. Then, it provides an introduction to the theoretical basis of the three machine learning techniques used, as well as a description of the three decision schemes examined. Next, a description of the e-learning courses data set upon which the method was applied as well as the details of the specific algorithm implementations used, are provided. The experimental results of the study according to the three performance evaluation criteria used, are reported in section 3. In section 4 the experimental results are discussed and their limitations are presented. Finally, section 5 concludes with the main findings and future work of this study.</p><!--VALIDHTML--><h2 class="svArticle" id="section_lbl2">2. Materials and methods</h2><h3 class="svArticle" id="section_lbl2.1">2.1. Related literature</h3><p class="svArticle section" id="">Several studies focus on the field of dropout prediction in high school, university and online learning levels. These studies can be divided into two categories, according to the type of data they use. The first category includes a number of studies which use time-invariant characteristics to determine the most important variables that lead to the prediction of the dropout status of students. In the second category, there are studies that incorporate time-varying student attributes, which change as the course progresses, to make predictions over student dropout or retention.</p><!--VALIDHTML--><h4 class="svArticle" id="section_lbl2.1.1">2.1.1. Studies using time-invariant student attributes</h4><p class="svArticle section" id="">Firstly, a variety of studies use past time-invariant student data as predictors, to retrieve the most important attributes related to a student&rsquo;s decision to withdraw from a course. The predictors identified by the aforementioned studies are three-fold: related to the demographic characteristics of the students, to their prior academic performance and to other factors that do not belong to the two aforementioned categories. It should also be noted here that studies of this type examine the correlation of the predictors with the student&rsquo;s decision to drop the course independently for each predictor, and their scope does not usually include reporting overall classification rates which would result from the combinative use of the predictors.</p><!--VALIDHTML--><p class="svArticle section" id="">A number of these studies use logistic regression analysis to construct and test the hypothesized prediction models. <span id="bbib43"><a href="#bib43" id="ancbbib43" class="intra_ref">Roblyer, Davis, Mills, Marshall, and Pape (2008)</a></span> use a sixty-item Likert scale instrument to gather data on student characteristics regarding the prediction of student retention and dropout in a virtual school environment. The variables gathered refer to a large student population of 2162 students and are evaluated through a binary logistic regression analysis. This study reports an overall correct classification rate of 79.3%, which corresponds to the best combination of predictors identified. The predictors which refer to the students&rsquo; demographic characteristics are age and home computer availability, those that refer to the students&rsquo; prior academic performance is the self-reported Grade Point Average (GPA) and the predictor that refers to other student-related factors is the school period for working on the virtual course. Although the model examined by the aforementioned study performs well in predicting the overall classification rate, which includes both completers and dropouts, it only achieves a 30.4% accuracy rate in correctly categorizing the dropout students only.</p><!--VALIDHTML--><p class="svArticle section" id="">The identification of age as a predictor of dropout likelihood is also supported by the study of <span id="bbib41"><a href="#bib41" id="ancbbib41" class="intra_ref">Newell (2007)</a></span>. This study uses logistic regression along with Chi-square and bivariate analysis to retrieve student-related predictor variables based on data derived from a very large population of 89,473 students enrolled in online courses, offered by the Georgia Virtual Technical College. Apart from age, the above study also identifies a variety of other demographic elements which include gender, ethnicity and financial aid eligibility, as predictors of successful course completion. Supporting that demographic characteristics can be used as indicative predictors of retention, <span id="bbib56"><a href="#bib56" id="ancbbib56" class="intra_ref">Zhang, Anderson, Ohland, Carter, and Thorndyke (2003)</a></span> use students&rsquo; pre-existing demographic and academic data along with multiple logistic regression to make predictions upon the retention of a large population of 57,549 engineering students located in 9 universities. The results of this study indicate that the most significant demographic characteristics to be used as predictors are gender, ethnicity and citizenship. Apart from these elements, the study also concludes that a number of other predictors, which are related to the students&rsquo; prior academic performance and include the SAT (Scholastic Aptitude Test) math scores, SAT verbal scores (SAT-V) and high school GPA, also play a significant role in students&rsquo; retention rates. SAT refers to a standardized test used for college admissions in the United States.</p><!--VALIDHTML--><div class="page_fragment_ind" data-id="frag_3"></div><script>prs.rt("abs_1st_end");</script></div>
+
+               
+
+       
+   
+        
+    </div>
+    <div id="footer-area-dummy"></div>
+    <div id="footer-area" aria-label="product support" role="contentinfo">
+      <div id="sdFoot">
+      <div id="footer" aria-label="Footer" role="navigation">	
+  <div class="bottomArticle"></div>
+  <div class="padding">
+    <div id="linkArea">
+      <div class="padding links">
+        <div style="float:left;width:0;height:1px;"></div>
+        <div id="banner-bottom">
+          <a class="S_C_aboutElsevier" href="http://www.elsevier.com" target="_blank" title="Elsevier homepage (opens in a new window)"></a>
+        </div>
+        <ul class="col5">
+<li><a target="_blank" href="http://www.info.sciverse.com/sciencedirect?utm_source=sciencedirect&utm_medium=link&utm_campaign=aboutsd">About ScienceDirect</a></li>
+</ul>
+<ul class="col5">
+<li> <a target="_blank" href="http://www.sciencedirect.com/science/contactus">Contact and support</a></li>
+</ul>
+<ul class="col5">
+<li><a target="_blank" href="http://www.elsevier.com/locate/termsandconditions?utm_source=sciencedirect&utm_medium=link&utm_campaign=terms">Terms and conditions</a></li>
+</ul>
+<ul class="col5">
+<li><a target="_blank" href="http://www.elsevier.com/privacypolicy?utm_source=sciencedirect&utm_medium=link&utm_campaign=privacy">Privacy policy</a></li>
+</ul><script>function loadSCode(){if(typeof SDM!="undefined"){var e=document.getElementsByTagName("body")[0],t=document.createElement("script");var prefix = "";if(document.location.protocol == "https:"){prefix = "origin-";}t.src = "//" + prefix + "cdn.els-cdn.com/sd/js/adobe/s_code_131.js";e.appendChild(t);sendSCStats()}else{setTimeout(loadSCode,100)}}function sendSCStats(){if(typeof s_tc_sciencedirect!="undefined"){s.t()}else{setTimeout(sendSCStats,100)}}if(window.addEventListener){window.addEventListener("load",loadSCode,false)}else if(window.attachEvent){window.attachEvent("onload",loadSCode)}else{window.onload=loadSCode}</script>
+        <div class="clear"></div>
+        <!-- CSAS will be providing the links-->
+      </div>
+      <div class="padding copyright">
+	<hr/>
+        Copyright &copy; 2015 Elsevier B.V. or its licensors or contributors. ScienceDirect&reg; is a registered trademark of Elsevier B.V.
+      </div>
+      <div class="padding" style="padding-bottom:4px;font-size:11px;">
+              Cookies are used by this site. To decline or learn more, visit our <a href="http://www.info.sciverse.com/sciencedirect/cookies" target="_blank">Cookies</a> page.
+        </div> 
+      
+        
+          <div class="padding links">
+            <div id="goToggleSite"><a class="mLink" site='Mobile' ckNm='Site' lnkOrg='article' lnkZn='footer' href='#'>Switch to Mobile Site</a></div>
+          </div>
+	  <form id="pgReload" method="get" action=""></form>
+        
+      
+    </div>
+  </div>
+</div> <!--footer-->
+
+      </div><!--sdFooter-->
+    </div><!--footer-area-->
+    </div>
+ </div>
+ <div id="rightPane" class="column" aria-label="Related content" role="complementary">
+  <div id="rightOuter" class="rightOuter">
+    <div id="rightInner" class="rightInner">
+       <div class="innerPadding">
+
+    <div id="SD_BIB" class="hidden entry separator appBox sgfNoTitleBar sgfNoGadgetBorder"></div>
+ 
+
+    
+    
+        <div id="recommend_related_articles" class="entry separator related closed">
+            
+                <h2><a href="#articles" class="toggle" aria-controls="relArtList" aria-expanded="false"><span class="iconArrow">&nbsp;</span>Recommended articles</a></h2>
+             
+             <ol id="relArtList"><li class="note"><p>No articles found.</p></li></ol>
+        </div>
+    
+    
+    
+        <div id="cited_by_articles" class="entry separator related closed">
+            <h2><a href="#articles" class="toggle" aria-controls="relArtList" aria-expanded="false"><span class="iconArrow">&nbsp;</span>Citing articles (<span id="hitcount">0</span>)</a></h2>
+            <ol id="citedByList"><li class="note"><p>This article has not been cited.</p></li></ol> 
+        </div>
+    
+    
+    
+        <div id="SD_CRA" class="hidden entry separator appBox sgfNoTitleBar sgfNoGadgetBorder"></div>  
+    
+    
+        
+            <div id="related_book_content" class="entry separator related closed">
+                <h2><a href="#articles" class="toggle" aria-controls="relArtList" aria-expanded="false"><span class="iconArrow">&nbsp;</span>Related book content</a></h2>
+                <ol id="relBkList"><li class="note" style="margin-left:15px;"><p>No articles found.</p></li></ol>
+            </div>
+        
+     
+
+
+
+    
+        <div class="appContainerDummy"></div>
+        <div class="appContainer js_application_content">
+            <ul class="hidden" id="dataRepHolder"></ul>
+            
+                <div id="SD_AT1P" class="boxLink sgfNoTitleBar sgfNoGadgetBorder"></div>
+            
+
+            
+                <div id="SD_FTA1" class="boxLink sgfHorToolbar sgfShowMyApps sgfShowMoreLessApps"></div>
+            
+        </div>
+    
+
+
+</div>
+
+<div class="js_workspace_content popup" aria-live="polite" role="region" aria-label="Overlay" aria-describedby="skuip-3">
+    <a aria-label="close overlay" title="close overlay" alt="close overlay" href="#" id="buttonClose" role="button" class="closeBt">&nbsp;</a>
+    <div class="scrollArea"><div id="workSpaceView"></div></div>
+</div>
+
+    </div><!--rightInner-->
+  </div><!--rightOuter-->
+ </div><!--rightPane-->
+</div><!--page-area-->
+
+
+
+<div style="clear:both;"></div>
+
+<form name="citationInfo" id ="citationInfo" method="POST" action="">
+    <input type="hidden" name="art_citation" value=""/>
+</form>
+<div id="pdfModalWindow" class="pdfModalWindow" style="display:none;" onClick="pdfCite.closePopup();"></div>
+
+
+<!-- PDFKING/PDFCITE -->
+<div id="suggestedPdfList" style="display:none;">
+ 
+<div id="modalBoxDisplay" class="nojs" tabindex="0" role="dialog" aria-labelledby="hdSDSuggestions">
+    <div class="pdfModalWindowMsgBox" id="pdfModalWindowMsgBox" >
+        <div>
+            <a onClick="pdfCite.closePopup();" href = "#" title = "Close article suggestions" alt="Close article suggestions">
+            <!-- JSB <img src = "http://cdn.els-cdn.com/sd/close-button.png" width = "25" height = "27" alt = "Close" /> -->
+                <div class="close">&nbsp;</div> 
+            </a>
+        </div>
+		<div class = "modal">
+           <form method="get" name="Tag" action="/science/suggestedArt/export" style="padding:0px; margin:0px;" target="">
+            <input type="hidden" name="pdfDownload" value="download">
+            
+                <input type="hidden" name="PDF_DDM_MAX" value=20>
+             
+            <input type="hidden" name="_retainOrder" value="Y">
+            <input class='zone' name='zone' type='hidden' value='DDM'/>
+            <div class = "header">
+                <h1 class = "headline" id="hdSDSuggestions">Recommended articles</h1>
+                <img class = "sd-bubbles_pdf" src = "http://cdn.els-cdn.com/sd/sciencedirect.svg" width = "176" height = "24" alt = "ScienceDirect" title = "" / onerror="this.src='http://cdn.els-cdn.com/sd/sciencedirect.png'">
+            </div>
+            <div id="SuggestedArtList">
+                <div class="toolBar">
+                <ul class = "group"> 
+                    <li class="selection">
+                        <input class="checkBox pdf_selectAll" type="checkbox" name="artt" value="" aria-label="Select all articles for export or download PDFs" style="opacity: 1;">
+                    </li>
+                    
+                    <li class="pdfDownloader">
+                        <input   
+                        value="Download PDFs" name="pdfDownloadButton" class="listAction iconBg" type="submit" 
+                         id="multiPdfIcon"
+                        
+                        aria-describedby="downloadAllPdfAx">
+                        <span id="downloadAllPdfAx" class="hidden">Opens document download manager</span>
+                    </li>
+                    
+                    
+                    <li class="exportListitem">
+                        <div class="pulldown" style="display:inline-block;">
+                            <div class="exportDivision" title="Export Citation">
+                            <div class="icon_exportarticlesci_dir initialImage export_icon" tabindex="0"> &nbsp; </div>
+                            <input id="icon_exportarticle" value="Export" name="export" class="listAction export export_general" tabindex="-1" type="button" aria-expanded="false" aria-controls="pdf_export_popup"> 
+                            <span class="downSM_sci_dir exportArrow"></span>
+                            </div>
+                            <div class="menu pdf_export_popup hidden" id="pdf_export_popup">
+                            <img  class='warningIcon' title="Warning Icon" alt="Warning Icon" src="http://cdn.els-cdn.com/sd/img/sprite_parts/warning_a.gif"/>
+                                    <script language="javascript" type="text/javascript">
+<!--
+
+function checkExportFormat(limit) {
+
+    var msg = "";
+
+    for (i=0;i<document.exportCite.elements.length;i++) {
+        if (document.exportCite.elements[i].value == "REFWX") {
+            if (document.exportCite.elements[i].checked) {
+                document.exportCite.setAttribute('target',"RefWorksMain");
+                if (checkLimit()) {
+                    if (limit) {
+                        msg = "It is possible that some users may experience problems when downloading large numbers of citations. If this happens please contact RefWorks support at your regionally hosted site or e-mail support@refworks.com to assist you further.\n\n";
+                    }
+                    msg += "Exporting to RefWorks may take some time, please wait....";
+                    alert(msg);
+                }
+            }
+            else {
+                document.exportCite.setAttribute('target',"");
+            }
+            break;
+        }
+    }
+    return true;
+}
+
+function determineCount(numStr) {
+    var count=1;
+
+    if(numStr.indexOf("-")) {
+        var rangeStr = numStr.split("-");
+
+        if(rangeStr.length == 2) {
+            var highNum = parseInt(rangeStr[1]);
+            var lowNum = parseInt(rangeStr[0]);
+
+            if(highNum >= lowNum) { count = (highNum - lowNum) + 1; }
+        }
+    }
+    return count;
+}
+
+function checkLimit(){
+
+    var selectNum = "";
+    var useSelected = false;
+    var allNum = 0;
+    var count = 0;
+    var rdoc = 0;
+
+    for (i=0;i<document.exportCite.elements.length;i++) {
+        if (document.exportCite.elements[i].name == "count") {
+            allNum = document.exportCite.elements[i].value;
+        }
+        if (document.exportCite.elements[i].name == "NUMBER_LIST") {
+            selectNum = document.exportCite.elements[i].value;
+        }
+        if (document.exportCite.elements[i].name == "_rdoc") {
+            rdoc = document.exportCite.elements[i].value;
+        }
+        if (document.exportCite.elements[i].value == "selected") {
+            if (document.exportCite.elements[i].checked) {
+                useSelected = true;
+            }
+        }
+    }
+
+    if (useSelected) {
+        selectNum = selectNum.replace(/ /g,"");
+        if(selectNum.indexOf(",")) {
+            var commaList = selectNum.split(",");
+            for(i=0; i < commaList.length; i++) {
+                count += determineCount(commaList[i]);
+            }
+        }
+        else {
+            count += determineCount(selectNum);
+        }
+    }
+    else { 
+        if (rdoc > 0) {
+            count = 1;
+        }
+        else {
+            count = allNum;
+        }
+    }
+
+    if(count > 50) { return true; }
+  
+    return false;
+}
+
+//-->
+</script>
+
+    <div class="exportInfo">
+        <div class="chkboxCount"></div>
+        <div class="exportHelp">
+            <a target="sdhelp" href="/science?_ob=HelpURL&_file=art_export.htm&_btn=Y&_zone=TopNavBar&_origin=article" title="Help (Opens new window)" onClick="var helpWin; helpWin=window.open('/science?_ob=HelpURL&_file=art_export.htm&_btn=Y&_zone=TopNavBar&_origin=article','sdhelp','scrollbars=yes,resizable=yes,directories=no,toolbar=no,menubar=no,status=no,width=984,height=738'); helpWin.focus(); return false">Help</a>
+        </div>
+    </div>
+
+    <div class="expContainer">
+      <ul class="Export_Popup" width="100%">
+        <li class="subHeading"><h3> Direct export </h3></li>
+        <li class="direct_export">
+         
+            <div>
+              <div class="btn_export directExport">
+                <div class="icon_Mendeley" title="Save to Mendeley">&nbsp;</div>
+                <input id="directExport" type="button" value="Save to Mendeley" name="Save to Mendeley" alt="Save to Mendeley" class="mendeleyBT button"/>
+              </div>
+            </div>
+        
+        
+            <div class="btnLine">
+              <div class="btn_export refworks">
+                <div class="icon_Refworks" title="Save to RefWorks">&nbsp;</div>
+                <input id="REFWX" type="button" value="Save to RefWorks" name="Save to RefWorks" alt="Save to RefWorks" class="button refworks"/>
+              </div> 
+            </div>
+            <div class="clear"> </div>
+        
+        </li>
+        <li class="subHeading big"> <h3>Export file</h3></li>
+        <li class="export_radio RIS"><input type="radio" id="RIS" checked name="citation-type" value="RIS"  class="artRadio expRadio RIS">&nbsp;<label for="RIS">RIS&nbsp;(for EndNote, Reference Manager, ProCite)</label>
+        </li>
+        <li class="export_radio"><input type="radio" id="BIBTEX" name="citation-type" value="BIBTEX"  class="artRadio expRadio BIBTEX">&nbsp;<label for="BIBTEX">BibTeX</label>
+        </li>
+        <li class="export_radio"><input type="radio" id="ASCII" name="citation-type" value="ASCII"  class="artRadio expRadio ASCII">&nbsp;<label for="ASCII">Text</label>
+        </li>
+        <li class="export_radio hidden"><input type="radio" id="REFWX" name="citation-type" value="REFWX"  class="artRadio expRadio REFWX">&nbsp;<label for="REFWX">RefWorks Direct Export</label>
+        </li>
+        <li class="subHeading big"><h3>Content</h3></li>
+        <li class="expCitab export_radio"><input type="radio" id="cite" class="cite artRadio expRadio" name="format" value="cite" >&nbsp;<label class="cit" for="cite"> Citation Only </label>
+        </li>
+        <li class="expCitab export_radio citab"><input type="radio" id="cite-abs" class="cite-abs artRadio expRadio" name="format" value="cite-abs" checked>&nbsp;<label class="cab" for="cite-abs"> Citation and Abstract </label>
+        </li>
+        <li class="export_submit">
+            <div class="downBtn export_downBtn">
+               <input type="submit" value="Export" name="export" alt="Export" class="button export_button" id="export_button"/>
+            </div> 
+        </li>
+      </ul>
+
+    </div>
+
+                            </div> 
+                        </div> 
+                    </li>
+                    
+                    
+                    <li class="SuggestedArtLabel">
+                      <img src="http://cdn.els-cdn.com/sd/sci_dir/open_access.gif" alt="Icon for open Access"> = Open Access/Open Archive <br>
+                    </li>
+                    
+                </ul>
+                </div>
+                
+                <div id="pdfkingContent" style="display:none;">
+                    <div class="popcontent"></div> 
+                    <div id="relatedArtList" data-entitled="Y"></div>
+                </div>
+                
+                <div class="originalArticleDiv">
+                    <ul>
+                    <li class="originalArticle">The original article you were looking at:</li>
+                    <li class="selection"><input class="checkBox" type="checkbox" name="art" value="1-s2.0-S0360131509001249" aria-labelledby="title_S0360131509001249" ></li>
+                    <li id="title_S0360131509001249" class="originalArticleName">Dropout prediction in e-learning courses through the combination of machine learning techniques</li>
+                    </ul>
+                </div>
+            </div>
+            <div class = "footer">
+                
+                <a class = "do-not-show" href="#" onClick="pdfCite.setOptOutFlag('http://www.sciencedirect.com/science/suggestedArt/optOut');" style="cursor: pointer;">Do not show again</a>
+            </div>
+          
+          </form>
+        </div>
+    </div>
+</div>
+
+
+</div>
+
+
+
+<script src="http://cdn.els-cdn.com/sd/js/sdX_1506R3.js"></script>
+
+
+
+
+<script src="http://cdn.els-cdn.com/sd/js/sd_1506R3.js"></script>
+
+
+
+<script src="http://cdn.els-cdn.com/sd/js/pa_1506R3.js"></script>
+
+
+<script>
+var sciverse="empty";
+var SDM=new Object;
+SDM.tm=new Object;
+SDM.tm.ahm='h'
+
+
+
+SDM.ep=new Object;
+SDM.ep.downloadCsvURL = "http://services.elsevier.com/SDWebExport/export/table/csv";
+SDM.ep.downloadActionURL = "http://www.sciencedirect.com/science/downloadActions/keyEvent/S0360131509001249/03601315";
+SDM.ep.gigyaLib="//cdn.gigya.com/JS/socialize.js?apiKey=3__Bt7bHrGM8mjKPwBuOVjWyMi678aF6-PewcnoHJJ6UR1fS5t9NG9RBbKHjE0oA6J";
+SDM.ep.imgUrlPrefix = "http://ars.els-cdn.com/content/image/";
+SDM.ep.mendeleyJS = "https://www.mendeley.com/minified/bookmarklet.js";
+SDM.ep.prDevice = "http://pa.elsevier.com";
+SDM.ep.pru = "http://pa.elsevier.com";
+SDM.ep.ref2ref2by = "http://www.sciencedirect.com/science/relLink/ajaxReq?_eid=1-s2.0-S0360131509001249";
+SDM.ep.staticImgUrlPrefix = "http://cdn.els-cdn.com/sd";
+SDM.ep.urlPrefix = "http://www.sciencedirect.com/science";
+SDM.ep.urlQualifier = "science";
+SDM.ep.urlScheme = "http://www.sciencedirect.com";
+SDM.ep.userActionURL = "http://www.sciencedirect.com/science/UserActions";
+ SDM.helpUrlDomain="http://help.sciencedirect.com/flare"; 
+
+
+
+
+SDM.pm=new Object;
+SDM.pm.cid = '271849';
+SDM.pm.contentFamily = "serial";
+SDM.pm.contentType = "JL";
+SDM.pm.coverDate = '30-Nov-2009';
+
+SDM.pm.doi = '10.1016/j.compedu.2009.05.010';
+
+SDM.doi = '10.1016/j.compedu.2009.05.010';
+SDM.pm.eid = '1-s2.0-S0360131509001249';
+SDM.pm.entitled = true;
+ SDM.pm.hubEid = '1-s2.0-S0360131509X00060'; 
+SDM.pm.indexType = '';
+SDM.pm.issnisbn = "03601315";
+
+SDM.pm.itemWeight = 'FULL-TEXT';
+SDM.pm.mod_cid="";
+SDM.pm.mod_srcTitle="";
+SDM.pm.mod_ISBN = "";
+SDM.pm.pdfEid = '1-s2.0-S0360131509001249-main.pdf';
+SDM.pm.pdfSize = '636940';
+SDM.pm.pii = 'S0360131509001249';
+SDM.pm.prodColor="sci_dir";if(SDM.pm.prodColor=="sci_dir")SDM.pm.prodColor="";
+ SDM.pm.rev = '20150514T071909483121'; 
+ SDM.pm.hrev = 'vH.7'; 
+ SDM.pm.pptURL = 'http://services.elsevier.com/SDWebExport/export/figure/'; 
+
+
+
+
+
+
+SDM.pf = new Object;
+SDM.pf.pdfAvail = true;
+SDM.pf.reqAllFrags = true;
+ SDM.pf.maxElemsAllFrags = 12000
+SDM.pf.relatedBkAvail=true;
+SDM.pf.mlktAvail = true;
+SDM.pf.hpccAvail = true;
+SDM.pf.blkSocialLogins=true;
+
+
+SDM.browserUserMsg=true;
+
+
+SDM.pf.citedByScAvail = true;
+SDM.pf.aetEnabled = false;
+ SDM.pf.suggestedArtPDFMaxWait="2000";
+
+
+SDM.pf.ads = new Object;
+SDM.pf.ads.leftUrl="/science/advertisement/left/num/543640/mainCat/general/cat/general/acct/38614ecc121adc912de6f3f77c25a088/isn/03601315/doi/10.1016_j.compedu.2009.05.010/page/article/artOAstatus/N";
+
+
+
+
+SDM.pf.dc = new Object;
+SDM.pf.dc.retry = 10;
+SDM.pf.dc.retryDelay = 300;
+SDM.pf.dc.retryFactor = 1.0;
+SDM.pf.dc.respObj = '';
+
+
+SDM.pf.er = new Object();
+
+
+
+
+
+
+SDM.pf.frag = new Object();
+SDM.pf.frag.fat = '95b30e7be678e3817d03d11550275c4342bfae7625e51263ecdb7288e12495ee1ef6813aaec22dbed7c280981406cc67a1de615414b634d179c4c87d2c4d88439aa28c24b62f1ab83a67f618cf4cba81b1fe8e3ea99181a4709620add237f5fbb07cef98eeda7edf4dc28710917ef38e3d8ed8a353744e03cc4ba9be92bdf5c8d19b265b75821bafa5c5048dedf4832cf0390440a79d327f';
+SDM.pf.frag.mapRetry = 20;
+SDM.pf.frag.mapRetryDelay = 2000;
+SDM.pf.frag.mapRetryFactor = 1.1;
+SDM.pf.frag.retry = 5;
+SDM.pf.frag.retryDelay = 2000;
+SDM.pf.frag.foldFactor = 1.5;
+SDM.pf.frag.hashWait = 5000;
+
+
+
+
+
+
+SDM.pf.gadget = new Object();
+SDM.pf.gadget.displayGadgets=true;
+SDM.pf.gadget.sciverseUrlPfx="http://www.sciencedirect.com";
+SDM.pf.gadget.sciverseJsonObject='';
+SDM.pf.gadget.sciverseGadgetDetailsID = "";
+SDM.pf.gadget.svShindigLib="http://sciverse-shindig.elsevier.com/gadgets/js/shindig-container:pubsub-2.js?c=1";
+SDM.pf.gadget.svSciverseLib="http://www.sciencedirect.com/gadgetservices/gadgets/v9/js/SciverseShindigService,GadgetToolBar,jquery-outside,jquery.ba-bbq.min,SciverseShindigContainer,ScienceDirectShindigServices.js";
+
+
+
+SDM.pf.mrwmod = new Object();
+SDM.pf.mrwmod.breadCrumbPathURL = "http://www.sciencedirect.com/science/module/breadCrumbPaths/isbn//pii/S0360131509001249";
+
+SDM.pf.mrwmod.ldrAvail = true;
+
+
+ 
+
+
+SDM.pf.oa = new Object();
+
+
+
+
+
+
+
+
+SDM.pf.ref = new Object();
+SDM.pf.ref.bs = 20;
+SDM.pf.ref.citedByURL = "http://www.sciencedirect.com/science/referenceResolution/ajaxRefResol?_updateCitedBy=";
+SDM.pf.ref.fd = 300;
+
+SDM.pf.ref.resolveURL = "http://www.sciencedirect.com/science/referenceResolution/ajaxRefResol?_pii=S0360131509001249&_refCnt=55&_docType=article";
+
+
+
+
+
+SDM.pf.toc=new Object;
+SDM.pf.toc.retry = 20;
+SDM.pf.toc.retryDelay = 1000;
+SDM.pf.toc.retryFactor = 1.09;
+SDM.pf.toc.outlineGraphics = false;
+SDM.pf.toc.outlineTab = "";
+
+SDM.pf.toc.urlTOCLink="http://www.sciencedirect.com/science/article/pii/S0360131509001249";
+SDM.pf.toc.urlTOCLinkQueryStr="?_rdoc=1&_fmt=full&_origin=&md5=22543fb95e34d36391c44b9d9cd72533";
+
+
+SDM.pf.ddm = new Object();
+SDM.pf.ddm.endpoint = "http://services.elsevier.com/SDWebExport/export/pdfdownload/pdf";
+
+
+
+
+
+
+
+SDM.si = new Object();
+SDM.si.webUserId = "2704216";
+SDM.si.sds = "c52c9c2ba1fff3d5585ab62b1effc83278ffd7431a779023847b0eef7de8a4d1a9b393262b84f759bcb1cad1f7f2753e";
+SDM.si.euidCookieObject='fadc2eeeec725b6da86a59450f4aa38d608a2058ddad4488c587041d84abd231e0e27d2cdd339fda';
+
+SDM.pageTransKey = "06/15/2015 10:00:45 EDT#2845_003#15331#158.182.198.177";
+SDM.pageType = "article_full";
+SDM.tid = "eadbd9cc-1366-11e5-ae4d-00000aacb35d";
+SDM.ud = "2704216|<SAInfo><SAId>1373</SAId><SAName>Electronic Resources Academic Library Link (ERALL)</SAName><SANum>S000001373</SANum></SAInfo>|C000058587|82783|IPRANGE";
+SDM.ieVersion="8";
+
+SDM.dac = new Object;
+SDM.svapi = SVApi;
+
+</script>
+
+
+<script src="http://cdn.els-cdn.com/sd/js/importer-api_1506R3.js.min"></script>
+
+
+<script>
+
+initializeArticlePage();
+</script>
+
+
+
+
+
+<div id="sdpa"></div>
+<script>SDPA.init();</script>
+<div id="appBackground"></div>
+
+<div id="appDialog" class="files">
+    <div id="header">
+        <h1 class="headline">Download PDFs</h1>
+        <img id="logo" class="sd-bubbles" src="http://cdn.els-cdn.com/sd/sciencedirect.svg" onerror="this.src='http://cdn.els-cdn.com/sd/sciencedirect.png'">
+        <a class="close" id="closeWindow" href="#"><img src="http://cdn.els-cdn.com/sd/img/sprite_parts/close-icon.png"></a>
+        
+    </div>
+    <div id="contentBlk" class="view">
+        <div class="help_button" id="ddmMainHelp"><a class="ddmHelp" target="sdhelp" href="/science?_ob=HelpURL&_file=DM_main.htm&_btn=Y&_zone=TopNavBar&_origin=article" title="Help (Opens new window)" onClick="var helpWin; helpWin=window.open('/science?_ob=HelpURL&_file=DM_main.htm&_btn=Y&_zone=TopNavBar&_origin=article','sdhelp','scrollbars=yes,resizable=yes,directories=no,toolbar=no,menubar=no,status=no,width=984,height=738'); helpWin.focus(); return false">Help</a></div>
+        <div class="help_button" id="ddmNewformatHelp"><a class="ddmHelp" target="sdhelp" href="/science?_ob=HelpURL&_file=DM_newformat.htm&_btn=Y&_zone=TopNavBar&_origin=article" title="Help (Opens new window)" onClick="var helpWin; helpWin=window.open('/science?_ob=HelpURL&_file=DM_newformat.htm&_btn=Y&_zone=TopNavBar&_origin=article','sdhelp','scrollbars=yes,resizable=yes,directories=no,toolbar=no,menubar=no,status=no,width=984,height=738'); helpWin.focus(); return false">Help</a></div>
+        <div id="filesTemplate"></div>
+        <div id="namingTemplate"></div> 
+    </div>
+    <div class="footer">
+    </div>
+</div>
+
+
+
+</body></html>
+

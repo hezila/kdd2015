@@ -57,19 +57,29 @@ class EnrollmentFeatureExtractor(FeatureExtractor):
                 .extract_staytime_var()\
                 .extract_server_event_count()\
                 .extract_browser_event_count()\
+                .extract_event_count()\
                 .extract_event_percentage()\
+                .extract_daytime()\
                 .extract_video_over10minutes_count()\
                 .extract_video_over10minutes_count_lst3week()\
+                .extract_video_over10minutes_count_lst2week()\
+                .extract_video_over10minutes_count_lst1week()\
                 .extract_problem_over3minutes_count()\
                 .extract_problem_over3minutes_count_lst3week()\
+                .extract_problem_over3minutes_count_lst2week()\
+                .extract_problem_over3minutes_count_lst1week()\
                 .extract_request_count_lst3weeks()\
                 .extract_request_count_lst2weeks()\
+                .extract_request_count_lst1weeks()\
                 .extract_server_event_count_lst3weeks()\
                 .extract_server_event_count_lst2weeks()\
+                .extract_server_event_count_lst1weeks()\
                 .extract_browser_event_count_lst3weeks()\
                 .extract_browser_event_count_lst2weeks()\
+                .extract_browser_event_count_lst1weeks()\
                 .extract_activedays_lst3weeks()\
                 .extract_activedays_lst2weeks()\
+                .extract_activedays_lst1weeks()\
                 .extract_avg_activedays_lst3weeks()\
                 .extract_avg_activedays_lst2weeks()\
                 .extract_month_fst_access()\

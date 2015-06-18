@@ -25,11 +25,11 @@ class RFCClassifier(BaseClassifier):
 
     """
 
-    def __init__(self, n_estimators=10, criterion='entropy',
+    def __init__(self, n_estimators=500, criterion='entropy',
                     max_depth=5, min_samples_split = 8,
                     min_samples_leaf=3, min_weight_fraction_leaf=0.0,
                     max_features='auto', max_leaf_nodes=None,
-                    bootstrap=True, oob_score=False, n_jobs=4,
+                    bootstrap=True, oob_score=False, n_jobs=6,
                     random_state=None, verbose=0, warm_start=False,
                     class_weight="auto"):
         self.n_estimators = n_estimators
