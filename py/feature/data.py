@@ -57,6 +57,9 @@ class ModuleDB:
             if c not in self.modules_by_cid[cid]:
                 self.modules_by_cid[cid].append(c)
 
+    def exist(self, mid):
+        return (mid in self.modules)
+
     def order_modules(self):
         for cid in self.modules_by_cid.keys():
             modules = [(mid, self.get_start(mid)) for mid in self.modules_by_cid[cid] if self.get_start(mid) is not None]
@@ -108,6 +111,9 @@ def load_modules(filename):
             line = line.strip()
             cid, mid, cate, children, start = line.split(',')
             # course_id,module_id,category,children,start
+            if cate not in ['chapter', 'sequential']:
+                continue
+
             children = children.strip()
             if len(children) > 0:
                 children = children.split(' ')

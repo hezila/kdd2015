@@ -5,6 +5,7 @@ import os, sys
 
 from feature.enrollment_feature_extractor import EnrollmentFeatureExtractor
 from feature.simple_feature_extractor import SimpleFeatureExtractor
+from feature.new_feature_extractor import NewFeatureExtractor
 
 from feature.course_feature_extractor import CourseFeatureExtractor
 from feature.week_feature_extractor import WeekFeatureExtractor
@@ -50,6 +51,8 @@ def main():
         extractor = EnrollmentFeatureExtractor(mode, data_type, log_path, feature_path, debug_limit)
     elif target == 'simple':
         extractor = SimpleFeatureExtractor(mode, data_type, log_path, feature_path, debug_limit)
+    elif target == 'new':
+        extractor = NewFeatureExtractor(mode, data_type, log_path, feature_path, debug_limit)
     elif target == 'course':
         extractor = CourseFeatureExtractor(mode, data_type, log_path, enrollment_path, label_path, object_path, feature_path, debug_limit)
     elif target == 'week':

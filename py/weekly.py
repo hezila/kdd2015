@@ -290,21 +290,27 @@ def main():
     # sys.exit(0)
 
     # train = load_dataset(options.train, options.label)
-    train = merge_features(['../data/train_simple_feature.csv',
+    train = merge_features([
+                            '../data/train_simple_feature.csv',
+                            '../data/train_azure_feature.csv',
+                            '../data/train_new_feature.csv',
                             '../data/train_course_feature.csv',
                             '../data/train_module_feature.csv'
                             ], '../data/truth_train.csv')
-    # train = train.drop('enrollment_id', axis=1)
+    train = train.drop('lst_lag', axis=1)
     # y = train.dropout.values
     # train_x = train.drop('dropout', axis=1)
 
-    test = merge_features( ['../data/simple_test.csv',
+    test = merge_features( [
+                            '../data/test_simple_feature.csv',
+                            '../data/test_azure_feature.csv',
+                            '../data/test_new_feature.csv',
                             '../data/test_course_feature.csv',
                             '../data/test_module_feature.csv'
                             ])
 
-    tt_ids = test.enrollment_id.values
-    # test_x = test.drop("enrollment_id", axis=1)
+    # tt_ids = test.enrollment_id.values
+    test = test.drop("lst_lag", axis=1)
 
     skip_log_ftrs = ['enrollment_id',
                     "event_problem_percentage",
@@ -355,8 +361,6 @@ def main():
                     "course_dropratio"
                     ]
 
-    cols = train.columns
-    log_ftrs = [ftr for ftr in cols if ftr not in skip_log_ftrs]
 
     #scaler = StandardScaler().fit(np.vstack((X_new, X_test)))
     # scaler = MinMaxScaler(feature_range=(-10,10)).fit(np.vstack((X_new, X_test)))
@@ -436,8 +440,8 @@ def main():
 
     # sqrtexp_transf(tr_x, tr_x.columns)
 
-    scaler = MinMaxScaler(copy=True)
-    tr_x = scaler.fit_transform(tr_x)
+    # scaler = MinMaxScaler(copy=True)
+    # tr_x = scaler.fit_transform(tr_x)
 
     # O = sos(tr_x, 'euclidean', 30, None)
     # print O
@@ -449,67 +453,134 @@ def main():
     # # tr_tsne = tsne.fit_transform(tr_svd)
     # tr_x = np.hstack((tr_x, tr_svd))
 
-    # log_transf(tr_x, tr_x.columns)
 
-    # tt_ids = test.enrollment_id.values
-    # tt_x = test.drop(['enrollment_id', 'week'], axis=1)
 
-    # clf = create_clf('rfc', None)
+    tt_ids = test.enrollment_id.values
+    tt_x = test.drop(['enrollment_id'], axis=1)
+    m, n = tt_x.shape
+    print  'M: %d, N: %d in TESTS' % (m, n)
+
+    tr_x = tr_x.drop('user_drop_ratio', axis=1)
+    tt_x = tt_x.drop('user_drop_ratio', axis=1)
+
+    # cols = tr_x.columns
+    # log_ftrs = [ftr for ftr in cols if ftr not in skip_log_ftrs]
     #
-    # clf.fit(tr_x, tr_y)
+    # log_transf(tr_x, log_ftrs)
+    # log_transf(tt_x, log_ftrs)
+
+    clf = create_clf('xgb', None)
+
+    clf.fit(tr_x, tr_y)
     # print "Features sorted by their coefficients:"
     # print sorted(zip(map(lambda x: round(x, 4), clf.coefficients()),
     #          cols), reverse=True)
 
     from sklearn.svm import SVC
     from sklearn.naive_bayes import GaussianNB
+    from gplearn.genetic import SymbolicRegressor
+    from sklearn.neighbors import KNeighborsClassifier
+    from classifier.elm.elm import ELMClassifier, GenELMClassifier
+    from classifier.elm.random_layer import RBFRandomLayer, MLPRandomLayer
 
     # scaler = StandardScaler(copy=True)
     # tr_x = scaler.fit_transform(tr_x)
     # clf = SVC(C=1.0, class_weight='auto', max_iter=200, probability=True, verbose=True)
 
+    # clf = SymbolicRegressor(population_size=2000,
+    #                         generations=20,
+    #                         tournament_size=100,
+    #                         init_depth=(3, 8),
+    #                         metric='mse',
+    #                         p_crossover=0.8,
+    #                         p_subtree_mutation=0.05,
+    #                         p_hoist_mutation=0.05,
+    #                         p_point_mutation=0.05,
+    #                         max_samples=0.8,
+    #                         n_jobs=6,
+    #                         verbose=1,
+    #                         random_state=0)
 
-    clf = create_clf('xgb', None)
+    # clf = KNeighborsClassifier(n_neighbors=80, algorithm="kd_tree")
+    # clf = ELMClassifier(n_hidden=500, activation_func='multiquadric')
+    # rbf_rhl = RBFRandomLayer(n_hidden=500, random_state=0, rbf_width=0.01)
+    # tanh_rhl = MLPRandomLayer(n_hidden=1000, activation_func="multiquadric", activation_args={'power':3.0})
+    # clf = GenELMClassifier(hidden_layer=tanh_rhl)
+    # clf = create_clf('xgb', None)
+    #
+    #
 
+    sparse_features = ['year_2014', 'year_2013', 'exam_time_fstday', 'holiday_fstday', 'exam_time_lstday',
+                'holiday_lstday', 'in_exam', 'in_holiday',
+                'duration_less2day', 'duration_less1week',
+                'duration_2week', 'duration_1month', 'sumlag<1week',
+                'sumlag1<>2week', 'sumlag>2week', 'more_weekend']
+    # tr_x = tr_x[sparse_features]
+    # tr_x = tr_x.drop(sparse_features, axis=1)
 
-    auc = cv_loop(tr_x, tr_y, clf, 5)
-    print 'AUC (week=universe): %f' % auc
+    # num_factors = 5
+    # num_iter = 15
+    # validation_size = 0.02
+    # clf = LibFMClassifier(num_factors=num_factors,
+    #                      num_iter = num_iter,
+    #                      validation_size = validation_size,
+    #                      verbose=True)
+    #
+    # train = [{}] * tr_x.shape[0]
+    # for col in sparse_features:
+    #     print tr_x[col].values
+    #     for i, x in enumerate(tr_x[col].values):
+    #         train[i][col] = x
+    #
+    # print train[0]
+    # print train[10000]
+    # print train[20000]
+    #
+    # from sklearn.feature_extraction import DictVectorizer
+    #
+    # v = DictVectorizer()
+    # tr_x = v.fit_transform(train)
+    # print tr_x.toarray()
+    # clf.fit(tr_x, tr_y)
+    #
+    # auc = cv_loop(tr_x, tr_y, clf, 5)
+    # print 'AUC (week=universe): %f' % auc
+    #
+    # sys.exit(0)
 
-    sys.exit(0)
-
-    train['week'] = train['duration'].apply(lambda x: int(x/7.0) + 1)
+    # train['week'] = train['duration'].apply(lambda x: int(x/7.0) + 1)
     # test['week'] = test['#duration'].apply(lambda x: int(x/7) + 1)
 
-    for w in range(1, 6):
-        print 'week: %d' % w
-        eids = train[(train['week'] >= w - 2) & (train['week'] <= w + 2)]['enrollment_id']
-        tr = train[train['enrollment_id'].isin(eids)]
-        tr = tr.drop(['enrollment_id', 'week'], axis=1)
-
-
-
-        tr_y = tr.dropout.values
-        tr_y = LabelEncoder().fit_transform(tr_y)
-
-        pos_sum = np.sum(tr_y == 1)
-        neg_sum = np.sum(tr_y == 0)
-        tr_x = tr.drop('dropout', axis=1)
-
-        # scaler = MinMaxScaler(copy=True)
-        # tr_x = scaler.fit_transform(tr_x)
-
-        dates[w] = (tr_x, tr_y)
-        m, n = tr_x.shape
-        print  'M: %d, N: %d, POS: %d; NEG: %d (%f)' % (m, n, pos_sum, neg_sum, neg_sum / (pos_sum + neg_sum + 0.0))
-
-        clf = create_clf('xgb', None)
-        # clf = SVC(C=5.0, class_weight='auto', max_iter=1500, kernel='poly', probability=True, verbose=True)
-        # clf = GaussianNB()
-        models[w] = clf
-        auc = cv_loop(tr_x, tr_y, models[w], 5)
-        print 'AUC (w=%d): %f' % (w, auc)
-
-    sys.exit(0)
+    # for w in range(1, 6):
+    #     print 'week: %d' % w
+    #     eids = train[(train['week'] >= w - 2) & (train['week'] <= w + 2)]['enrollment_id']
+    #     tr = train[train['enrollment_id'].isin(eids)]
+    #     tr = tr.drop(['enrollment_id', 'week'], axis=1)
+    #
+    #
+    #
+    #     tr_y = tr.dropout.values
+    #     tr_y = LabelEncoder().fit_transform(tr_y)
+    #
+    #     pos_sum = np.sum(tr_y == 1)
+    #     neg_sum = np.sum(tr_y == 0)
+    #     tr_x = tr.drop('dropout', axis=1)
+    #
+    #     # scaler = MinMaxScaler(copy=True)
+    #     # tr_x = scaler.fit_transform(tr_x)
+    #
+    #     dates[w] = (tr_x, tr_y)
+    #     m, n = tr_x.shape
+    #     print  'M: %d, N: %d, POS: %d; NEG: %d (%f)' % (m, n, pos_sum, neg_sum, neg_sum / (pos_sum + neg_sum + 0.0))
+    #
+    #     clf = create_clf('xgb', None)
+    #     # clf = SVC(C=5.0, class_weight='auto', max_iter=1500, kernel='poly', probability=True, verbose=True)
+    #     # clf = GaussianNB()
+    #     models[w] = clf
+    #     auc = cv_loop(tr_x, tr_y, models[w], 5)
+    #     print 'AUC (w=%d): %f' % (w, auc)
+    #
+    # sys.exit(0)
 
     preds = clf.predict_proba(tt_x)[:,1]
 
@@ -556,7 +627,7 @@ def main():
     #
     eeids.sort()
 
-    output = open("weekly_submission.csv", 'w')
+    output = open("all600_submission.csv", 'w')
     for k in eeids:
         p = results[k]
         # k = int(k.split('-')[0])

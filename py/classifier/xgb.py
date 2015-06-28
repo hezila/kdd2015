@@ -13,9 +13,9 @@ class XGBClassifier(BaseClassifier):
 
     """
 
-    def __init__(self, max_depth=6,
-                    learning_rate=0.05,
-                    n_estimators=100,
+    def __init__(self, max_depth=5,
+                    learning_rate=0.03,
+                    n_estimators=600,
                     silent=True,
                     objective="binary:logistic",
                     nthread= 8,

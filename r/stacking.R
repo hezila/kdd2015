@@ -7,7 +7,7 @@ setwd("~/Dropbox/kddcup2015/r")
 
 # load data
 ## train data
-train.feature = fread('../data/train_simple_feature.csv')
+train.feature = fread('../data/train_course_feature.csv')
 train.truth = fread('../data/truth_train.csv')
 train.truth = train.truth[1:nrow(train.truth),]
 #train.feature$fst_day <- NULL
@@ -16,7 +16,7 @@ train.truth = train.truth[1:nrow(train.truth),]
 eids = train.feature$enrollment_id
 train.feature$enrollment_id <- NULL
 #train.feature = 1/(1+exp(-sqrt(train.feature)))
-train.feature = log(1 + train.feature)
+#train.feature = log(1 + train.feature)
 train.feature$enrollment_id = eids
 
 setnames(train.truth, colnames(train.truth), c('enrollment_id', 'dropout'))

@@ -6,6 +6,7 @@ import os
 
 from course_feature_bag import CourseFeatureBag
 from feature_extractor import FeatureExtractor
+from simple_course_db import SimpleCourseDB
 from utils import *
 from data import *
 
@@ -19,41 +20,10 @@ base_dir = os.path.dirname(__file__)
 
 class CourseFeatureExtractor(FeatureExtractor):
     def __init__(self, mode, data_type, log_csv_path, enrollment_path, label_path, module_path, feature_path, debug_limit):
-        labels = {}
-        with open(label_path, 'r') as r:
-            for line in r:
-                eid, label = line.strip().split(',')
-                if str.isdigit(eid):
-                    labels[eid] = int(label)
-
-        course_counts = {}
-        course_drops = {}
-        with open(enrollment_path, 'r') as r:
-            for line in r:
-                eid, uid, cid = line.strip().split(',')
-                if str.isdigit(eid):
-                    if cid not in course_counts:
-                        course_counts[cid] = 1.0
-                    else:
-                        course_counts[cid] += 1.0
-
-                    l = labels[eid]
-                    if l == 1:
-                        if cid not in course_drops:
-                            course_drops[cid] = 1.0
-                        else:
-                            course_drops[cid] += 1.0
-
-
-        course_db = {}
-        for cid in course_counts.keys():
-            course_db[cid] = (course_counts[cid], course_drops[cid])
-
-        self.course_db = course_db
-
-        self.module_db = load_modules(module_path)
-        self.module_db.order_modules()
-
+        self.db = SimpleCourseDB(mode, data_type, log_csv_path, enrollment_path, label_path, module_path, feature_path, debug_limit)
+        self.db.build()
+        print 'finish build course DB!'
+        log_csv_path = base_dir + '/../../data/log_train.csv'
         FeatureExtractor.__init__(self, mode, data_type, log_csv_path, feature_path, debug_limit)
 
 
@@ -67,13 +37,17 @@ class CourseFeatureExtractor(FeatureExtractor):
 
     def _extract_enrollment_features(self, iter):
         for bag in iter:
-            yield bag.extract_course_audience(self.course_db)\
-                .extract_course_drop(self.course_db)\
-                .extract_course_dropratio(self.course_db)\
-                .extract_left_module_count(self.module_db)\
-                .extract_course_finish(self.module_db)\
-                .extract_lag_nextmodule(self.module_db)\
-                .extract_lag_lastmodule(self.module_db)
+            yield bag.extract_course_audience(self.db)\
+                .extract_left_module_count(self.db)\
+                .extract_module_count(self.db)\
+                .extract_module_lag2(self.db)\
+                .extract_module_lag(self.db)\
+                .extract_course_finish(self.db)\
+                .extract_lag_nextmodule(self.db)\
+                .extract_lag_lastmodule(self.db)\
+                .extract_course_timeslot(self.db)\
+                .extract_user_variables(self.db)
+
 
     def _tuple_generator(self, iter):
         for line in iter:

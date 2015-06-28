@@ -1,3 +1,6 @@
+# http://mlwave.com/kaggle-ensembling-guide/
+# https://github.com/MLWave/Kaggle-Ensemble-Guide
+
 class EnsembleClassifier(BaseEstimator, ClassifierMixin):
     def __init__(self, classifiers=None):
         self.classifiers = classifiers

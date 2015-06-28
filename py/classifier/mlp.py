@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
+# https://github.com/christophebourguignat/notebooks/blob/master/Tuning%20Neural%20Networks.ipynb
+
 import numpy as np
 import pandas as pd
 

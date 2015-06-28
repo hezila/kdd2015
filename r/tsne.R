@@ -10,7 +10,7 @@ setwd("~/Dropbox/kddcup2015/r")
 
 # load data
 ## train data
-train.feature = fread('../data/train_simple_feature.csv')
+train.feature = fread('../data/train_course_feature.csv')
 train.truth = fread('../data/truth_train.csv')
 train.truth = train.truth[1:nrow(train.truth),]
 #train.feature$fst_day <- NULL
