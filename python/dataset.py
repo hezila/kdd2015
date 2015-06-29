@@ -21,7 +21,7 @@ def merge_features(files, label_file=None):
     if label_file is not None:
         labels = pd.read_csv(label_file)
         data_set = pd.merge(data_set, labels, on="enrollment_id")
-        dataset['dropout'] = encode_labels(data_set.dropout.values)
+        #dataset['dropout'] = encode_labels(data_set.dropout.values)
 
     return data_set
 
@@ -96,7 +96,7 @@ def sqrtexp_transf_replace(data, features):
         features = data.columns
     for col in features:
         data[col] = data[col].apply(lambda x: 1.0 / (1.0 + math.exp(-math.sqrt(x))))
-    returnd data
+    return data
 
 def encode_labels(labels):
     # encode labels

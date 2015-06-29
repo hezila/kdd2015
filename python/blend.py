@@ -16,13 +16,14 @@ def train_blend(X, y, X_test, clf_list, n_folds, seed=0):
     blend_train = np.zeros((m_train, n_clf))
     
     m_test, n = X_test.shape
-    blend_test = np.zeors((m_test, n_clf))
+    blend_test = np.zeros((m_test, n_clf))
     
     for i, (cname, clf) in enumerate(clf_list):
         print '%d-th classifier: %s' % (i+1, cname)
         blend_test_subfold = np.zeros((m_test, n_folds))
         for j, (tr, cv) in enumerate(stratified_KFold):
-            print '%-th fold' % (j+1)
+            print '%d-th fold' % (j+1)
+
             X_tr, X_cv = X[tr], X[cv]
             y_tr, y_cv = y[tr], y[cv]
             
