@@ -14,11 +14,15 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from dataset import *
 from util import *
 
+
+
 from models.logistic import LogisticClassifier
 from models.rfc import RFCClassifier
 from models.xgb import XGBClassifier
-#from models.glbtc import BoostedTreesClassifier
+from models.glbtc import BoostedTreesClassifier
 from models.extra import ExtTreeClassifier
+from models.knn import KNNClassifier
+from models.keras_deep import DeepNNClassifier
 
 from optparse import OptionParser
 import gc
@@ -30,7 +34,7 @@ def cal_auc(y, preds):
 
 def train_and_evaluate(X, y, clf):
     tr_x, tr_y, tt_x, tt_y = random_split(X, y)
-    
+
     clf.fit(tr_x, tr_y)
     preds = clf.predict_proba(tt_x)[:,1]
     auc = cal_auc(tt_y, preds)
@@ -46,7 +50,7 @@ def cv_loop(X, y, model, n_folds=5, verbose=False):
         print "AUC (fold %d/%d): %f" % (i + 1, n_folds, auc)
         mean_auc += auc
         i += 1
-        # model.model = None                                                                                                                                                         
+        # model.model = None
         gc.collect()
     mean_auc = mean_auc / n_folds
     return mean_auc
@@ -57,16 +61,28 @@ def create_clf(name, paras=None):
             penalty = paras.get('penalty', "l2")
             max_iter = paras.get('max_iter', 500)
             C = paras.get('C', 1.0)
+            scaler = paras.get('scaler', None)
 
             lgc = LogisticClassifier(penalty = penalty,
                                         max_iter = max_iter,
                                         C = C,
+                                        scaler = scaler,
                                         verbose = 0)
 
         else:
             lgc = LogisticClassifier()
         return lgc
-    
+    elif name == 'knn':
+        if paras:
+            n_neighbors = paras.get('n_neighbors', 5)
+            p = paras.get('p', 2)
+            scaler = paras.get('scaler', None)
+            weights = paras.get('weights', "uniform")
+            knn = KNNClassifier(n_neighbors=n_neighbors, p = p,
+                                weights = weights, scaler=scaler)
+        else:
+            knn = KNNClassifier()
+        return knn
     elif name == 'rfc':
         if paras:
             n_estimators = paras.get('n_estimators', 1000)
@@ -136,3 +152,16 @@ def create_clf(name, paras=None):
 
 
         return gbtcf
+    elif name == 'deep':
+        if paras:
+            neuro_num = paras.get('neuro_num', 512)
+            nb_epoch = paras.get('nb_epoch', 200)
+            scaler = paras.get("scaler", None)
+            optimizer = paras.get("optimizer", "adam")
+            deep = DeepNNClassifier(neuro_num = neuro_num,
+                                    nb_epoch = nb_epoch,
+                                    optimizer = optimizer, scaler = scaler)
+            return deep
+        else:
+            deep = DeepNNClassifier()
+            return deep

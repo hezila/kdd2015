@@ -4,38 +4,26 @@
 import numpy as np
 import pandas as pd
 
-from sklearn import linear_model
-from sklearn.feature_selection import RFE
+from sklearn.neighbors import KNeighborsClassifier
+
 
 
 from base_classifier import BaseClassifier
 
-class LogisticClassifier(BaseClassifier):
+class KNNClassifier(BaseClassifier):
     """
 
     """
 
-    def __init__(self, penalty='l2',
-                    dual = False,
-                    tol = 0.0001,
-                    C = 1.0, # smaller values specify stronger regularization
-                    fit_intercept = True,
-                    intercept_scaling = 1,
-                    class_weight = "auto",
-                    random_state = None,
-                    solver = 'liblinear', # ‘newton-cg’, ‘lbfgs’, ‘liblinear’
-                    max_iter = 1000,
-                    multi_class = 'ovr',
-                    scaler=None,
-                    verbose=0):
+    def __init__(self, n_neighbors=5,
+                 p = 2,
+                 weights = 'uniform', # 'uniform', 'distance'
+                 scaler=None,
+                 verbose=0):
 
-        self.penalty = penalty
-        self.solver = solver
-        self.tol = tol
-        self.C = C
-        self.max_iter = max_iter
-        self.class_weight = class_weight
-        self.intercept_scaling = intercept_scaling
+        self.n_neighbors = n_neighbors
+        self.p = p
+        self.weights = weights
         self.scaler = scaler
         self.verbose = verbose
 
@@ -59,25 +47,15 @@ class LogisticClassifier(BaseClassifier):
         self : object
             return self.
         """
-        model = linear_model.LogisticRegression(penalty = self.penalty,
-                                                        solver = self.solver,
-                                                        tol = self.tol,
-                                                        max_iter = self.max_iter,
-                                                        intercept_scaling = self.intercept_scaling,
-                                                        class_weight = self.class_weight,
-                                                        C=self.C)
-
-        # rfe = RFE(model, 50)
-        # rfe = rfe.fit(X, y)
-        # # summarize the selection of the attributes
-        # print(rfe.support_)
-        # print(rfe.ranking_)
-        # self.model = rfe
+        clf = KNeighborsClassifier(n_neighbors=self.n_neighbors,
+                                   p = self.p,
+                                   weights = self.weights,
+                                   algorithm="kd_tree")
 
         if self.scaler:
             X = self.scaler.transform(X)
 
-        self.model = model.fit(X, y)
+        self.model = clf.fit(X, y)
 
         # self.print_coefficients()
 

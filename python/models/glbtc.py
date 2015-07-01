@@ -124,6 +124,7 @@ class BoostedTreesClassifier(BaseClassifier):
                 max_iterations      = self.max_iterations,
                 verbose             = self.verbose)
         self.num_class = len(np.unique(y))
+        return self
 
     def predict_proba(self, X):
         """

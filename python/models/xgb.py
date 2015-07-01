@@ -18,7 +18,7 @@ class XGBClassifier(BaseClassifier):
                     n_estimators=600,
                     silent=True,
                     objective="binary:logistic",
-                    nthread= 8,
+                    nthread= 6,
                     gamma=0.3,
                     min_child_weight=3,
                     max_delta_step=0,
@@ -92,8 +92,8 @@ class XGBClassifier(BaseClassifier):
         clf = clf.fit(X, y, weights)
 
         self.model = clf
-
         self.num_class = len(np.unique(y))
+        return self
 
     def predict_proba(self, X):
         """
