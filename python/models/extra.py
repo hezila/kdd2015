@@ -46,3 +46,6 @@ class ExtTreeClassifier(BaseClassifier):
 
     def predict_proba(self, X):
         return self.model.predict_proba(X)
+
+    def predict(self, X):
+        return self.model.predict(X)

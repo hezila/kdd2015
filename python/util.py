@@ -157,11 +157,19 @@ def create_clf(name, paras=None):
             neuro_num = paras.get('neuro_num', 512)
             nb_epoch = paras.get('nb_epoch', 200)
             scaler = paras.get("scaler", None)
+            class_weight = paras.get('class_weight', None)
             optimizer = paras.get("optimizer", "adam")
             deep = DeepNNClassifier(neuro_num = neuro_num,
                                     nb_epoch = nb_epoch,
-                                    optimizer = optimizer, scaler = scaler)
+                                    class_weight = class_weight,
+                                    optimizer = optimizer,
+                                    scaler = scaler)
             return deep
         else:
             deep = DeepNNClassifier()
             return deep
+
+def dump_data(data, columns, filepath):
+    df = pd.DataFrame(data, columns=columns)
+    df['enrollment_id'] = df['enrollment_id'].astype(int)
+    df.to_csv(filepath, index=False)

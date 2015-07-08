@@ -6,7 +6,7 @@ import os, sys
 
 from extractor.simple_feature_extractor import SimpleFeatureExtractor
 
-from extractor.course_feature_extractor import CourseFeatureExtractor
+from extractor.plus_feature_extractor import PlusFeatureExtractor
 # from extractor.module_feature_extractor import ModuleFeatureExtractor
 from optparse import OptionParser
 
@@ -46,8 +46,8 @@ def main():
     extractor = None
     if target == 'simple':
         extractor = SimpleFeatureExtractor(mode, data_type, log_path, feature_path, debug_limit)
-    elif target == 'course':
-        extractor = CourseFeatureExtractor(mode, data_type, log_path, enrollment_path, label_path, object_path, feature_path, debug_limit)
+    elif target == 'plus':
+        extractor = PlusFeatureExtractor(mode, data_type, log_path, feature_path, debug_limit)
     # elif target == 'module':
     #     extractor = ModuleFeatureExtractor(mode, data_type, log_path, object_path, feature_path, debug_limit)
     else:

@@ -18,7 +18,7 @@ class XGBClassifier(BaseClassifier):
                     n_estimators=600,
                     silent=True,
                     objective="binary:logistic",
-                    nthread= 6,
+                    nthread= 3,
                     gamma=0.3,
                     min_child_weight=3,
                     max_delta_step=0,
@@ -84,10 +84,10 @@ class XGBClassifier(BaseClassifier):
                                 base_score=self.base_score,
                                 seed=0)
         weights = None
-        if self.class_weight and self.class_weight == 'auto':
-            weights = np.ones(len(y))
-            ratio = float(np.sum(y == 1)) / np.sum(y==0)
-            weights[y==0] = ratio * 0.5
+        # if self.class_weight and self.class_weight == 'auto':
+        #     weights = np.ones(len(y))
+        #     ratio = float(np.sum(y == 1)) / np.sum(y==0)
+        #     weights[y==0] = ratio * 0.5
 
         clf = clf.fit(X, y, weights)
 
@@ -123,7 +123,7 @@ class XGBClassifier(BaseClassifier):
         yhat: array-like, shape = (n_samples, )
             Returns the predicted class of the sample
         """
-        pass
+        return self.model.predict(X)
 
     def evaluate(self, X, y):
         pass

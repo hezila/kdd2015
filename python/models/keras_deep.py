@@ -32,10 +32,15 @@ def process_labels(labels, encoder=None, categorical=True):
     return y, encoder
 
 class DeepNNClassifier(BaseClassifier):
-    def __init__(self, neuro_num=512, nb_epoch=200, optimizer = "adam", scaler=None, verbose=False):
+    def __init__(self, neuro_num=512, nb_epoch=200,
+                 optimizer = "adam",
+                 class_weight = None,
+                 scaler=None,
+                 verbose=False):
         self.neuro_num = neuro_num
         self.nb_epoch = nb_epoch
         self.optimizer = optimizer
+        self.class_weight = class_weight
         self.scaler = scaler
         self.verbose = verbose
 
@@ -72,7 +77,7 @@ class DeepNNClassifier(BaseClassifier):
 
 
         model.fit(X, y, nb_epoch=self.nb_epoch,
-                  batch_size=256, validation_split=0.15,
+                  batch_size=256, validation_split=0.2,
                   show_accuracy=True,
                   shuffle=True)
         self.model = model
