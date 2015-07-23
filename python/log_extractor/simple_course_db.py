@@ -136,15 +136,13 @@ class SimpleCourseDB(FeatureExtractor):
 
                     if l == 1:
                         drops += 1.0
-            n = 0
-            if uid in train_courses_by_user:
-                n = len(train_courses_by_user[uid]) + 0.0
-                n -= 1
 
             if drops > 0:
                 drops = drops - 1.0
-
             train_user_drops[uid] = drops
+            n = 0
+            if uid in train_courses_by_user:
+                n = len(train_courses_by_user[uid]) + 0.0
             train_user_drop_ratio[uid] = (drops + 8) / (n + 10)
 
         self.user_drops = train_user_drops
@@ -162,7 +160,6 @@ class SimpleCourseDB(FeatureExtractor):
                               'all_audience': all_audience,
                               'drops': course_drops[cid],
                               'drop_ratio': course_drops[cid] / (train_course_counts[cid] + 0.0)}
-
 
         for cid in course_counts.keys():
             course_pop = course_counts[cid] / max_audience

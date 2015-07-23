@@ -18,7 +18,7 @@ class XGBClassifier(BaseClassifier):
                     n_estimators=600,
                     silent=True,
                     objective="binary:logistic",
-                    nthread= 3,
+                    nthread= 8,
                     gamma=0.3,
                     min_child_weight=3,
                     max_delta_step=0,

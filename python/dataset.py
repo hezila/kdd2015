@@ -9,6 +9,75 @@ from sklearn import preprocessing
 from sklearn.cross_validation import StratifiedShuffleSplit, StratifiedKFold
 from sklearn.feature_selection import VarianceThreshold
 
+
+from ubd.unbalanced_dataset import UnbalancedDataset
+from ubd.over_sampling import OverSampler
+from ubd.over_sampling import SMOTE
+
+from ubd.under_sampling import UnderSampler
+from ubd.under_sampling import TomekLinks
+from ubd.under_sampling import ClusterCentroids
+from ubd.under_sampling import NearMiss
+from ubd.under_sampling import CondensedNearestNeighbour
+from ubd.under_sampling import OneSidedSelection
+from ubd.under_sampling import NeighbourhoodCleaningRule
+
+from ubd.ensemble_sampling import EasyEnsemble
+from ubd.ensemble_sampling import BalanceCascade
+
+from ubd.pipeline import SMOTEENN
+from ubd.pipeline import SMOTETomek
+
+def ubd_sample(X, y, name="smote_regular", k =5, m = 10, ratio=1.0):
+    if name == 'smote_regular':
+        sm = SMOTE(kind='regular', k = k, m = m, ratio = ratio, verbose=True)
+        svmx, svmy = sm.fit_transform(X, y)
+
+        return (svmx, svmy)
+
+    elif name == 'smote_type1':
+        sm = SMOTE(kind='borderline1', k = k, m = m, ratio = ratio, verbose=True)
+        svmx, svmy = sm.fit_transform(X, y)
+        return (svmx, svmy)
+
+    elif name == 'smote_type2':
+        sm = SMOTE(kind='borderline2', k= 5, m = 10, ratio = 1.0, verbose=True)
+        svmx, svmy = sm.fit_transform(X, y)
+        return (svmx, svmy)
+
+    elif name == 'smote_svm': # too slowly
+        svm_args={'class_weight': 'auto', 'kernel': 'linear'}
+
+        sm = SMOTE(kind='svm', verbose=True, **svm_args)
+        svmx, svmy = sm.fit_transform(X, y)
+        return (svmx, svmy)
+    elif name == 'smote_tomek':
+        print('SMOTE Tomek links')
+        STK = SMOTETomek(verbose=True)
+        stkx, stky = STK.fit_transform(X, y)
+        return (stkx, stky)
+    elif name == 'smote_enn':
+        print('SMOTE ENN')
+        SENN = SMOTEENN(ratio = 2.0, verbose=True)
+        sennx, senny = SENN.fit_transform(X, y)
+        return (sennx, senny)
+    elif name == 'smote_easy':
+        print('EasyEnsemble')
+        EE = EasyEnsemble(verbose=True)
+        eex, eey = EE.fit_transform(X, y)
+        return (eex, eey)
+
+    elif name == 'random_sample':
+        US = UnderSampler(verbose=True)
+        usx, usy = US.fit_transform(X, y)
+        return (usx, usy)
+    elif name == 'cascade':
+        print 'Cascade UBD'
+        BS = BalanceCascade(classifier = 'gradient-boosting', verbose=True)
+        bsx, bsy = BS.fit_transform(X, y)
+        return (bsx, bsy)
+
+
 def merge_features(files, label_file=None):
     data_set = None
     for filepath in files:
@@ -17,7 +86,7 @@ def merge_features(files, label_file=None):
         else:
             d = pd.read_csv(filepath)
             data_set = pd.merge(data_set, d, on="enrollment_id")
-    
+
     if label_file is not None:
         labels = pd.read_csv(label_file)
         data_set = pd.merge(data_set, labels, on="enrollment_id")

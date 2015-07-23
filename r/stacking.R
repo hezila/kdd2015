@@ -2,12 +2,13 @@ require('randomForest')
 require('data.table')
 require('xgboost')
 library("ROCR")
+require('penalizedLDA')
 
 setwd("~/Dropbox/kddcup2015/r")
 
 # load data
 ## train data
-train.feature = fread('../data/train_course_feature.csv')
+train.feature = fread('../data/train_simple_feature.csv')
 train.truth = fread('../data/truth_train.csv')
 train.truth = train.truth[1:nrow(train.truth),]
 #train.feature$fst_day <- NULL
@@ -39,6 +40,14 @@ train.sumpos = sum(train.dataset$dropout == 1.0)
 train.sumneg = sum(train.dataset$dropout == 0.0)
 ratio = train.sumpos / train.sumneg + 3.0
 train.weights = ifelse(train.dataset$dropout==0, ratio, 1)
+
+
+# Perform cross-validation #
+# Use type="ordered" -- that is, we are assuming that the features have
+# some sort of spatial structure
+out <-PenalizedLDA(data.matrix(train.feature), data.matrix(train.truth), lambda=.14,K=2)
+print(out)
+plot(out)
 
 # glm
 t = proc.time()

@@ -44,6 +44,9 @@ def cv_loop(X, y, model, n_folds=5, verbose=False):
     mean_auc = 0.
     i = 0
     for tr_x, tr_y, va_x, va_y in folds_split(X, y, n_folds= n_folds):
+        tr_x, tr_y = ubd_sample(tr_x, tr_y, ratio = 4, name='smote_type1')
+        #tr_xs, tr_ys = ubd_sample(tr_x, tr_y, ratio = 3, name='cascade')
+        #tr_x, tr_y = tr_xs[0], tr_ys[0]
         model.fit(tr_x, tr_y)
         preds = model.predict_proba(va_x)[:,1]
         auc = cal_auc(va_y, preds)

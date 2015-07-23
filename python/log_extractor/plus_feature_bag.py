@@ -7,7 +7,7 @@ import time
 import os
 import math
 
-#import numpy as np
+import numpy as np
 
 __author__ = 'Feng Wang (Felix)'
 __email__ = 'wangfelix87@gmail.com'
@@ -37,7 +37,7 @@ class PlusFeatureBag(FeatureBag):
             user_drop_ratio = db.user_drops_ratio[uid]
         #self.feature_keys.append('user_drops_count')
         #self.feature_values.append(user_drops)
-        self.feature_keys.append('user_drop_ratio_scale')
+        self.feature_keys.append('user_drop_ratio')
         self.feature_values.append(user_drop_ratio)
         return self
 

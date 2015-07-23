@@ -12,24 +12,27 @@ from util import *
 def train_semi(X, y, X_test, clf, n_folds = 5, n_test_folds = 3, n_runs = 3):
     m_train, n = X.shape
 
+    print 'TRAIN y shape=%s' % (str(y.shape))
+
     m_test, n = X_test.shape
     tt_y = np.ones(m_test)
 
     clf = clf.fit(X, y)
     tt_y = clf.predict(X_test)
-
+    print 'TEST X shape=%s' % (str(X_test.shape))
     print 'TEST y shape=%s' % (str(tt_y.shape))
 
 
     train_KFold = list(folds_indexes(y, n_folds))
-    test_KFold = list(folds_indexes(tt_y, n_runs))
+    test_KFold = list(folds_indexes(tt_y, n_folds))
 
     blend_X = None
     Ys = []
     for i in xrange(n_runs):
         print 'Iter [%d/%d]' % (i+1, n_runs)
+
         test_tr, test_cv = test_KFold[i]
-        print test_tr
+        #print test_tr
         test_X_tr = X_test[test_tr]
         test_y_tr = tt_y[test_tr]
         Ys.append(test_y_tr)
